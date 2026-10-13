@@ -17,7 +17,7 @@ type Props = {
   placeholder: boolean;
 };
 
-export function Hero({ title, sub, ctaLabel, ctaHref, bigName, tags, placeholder }: Props) {
+export function Hero({ title, sub, ctaLabel, ctaHref, bigName, tags }: Props) {
   const rootRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -54,8 +54,8 @@ export function Hero({ title, sub, ctaLabel, ctaHref, bigName, tags, placeholder
         },
       });
 
-      // 2) Text drifts up and fades out during the first part of the scroll.
-      gsap.to(q(".hero__inner"), {
+      // 2) Text and tagline drift up and fade out during the first part of the scroll.
+      gsap.to(q(".hero__inner, .hero__tagline"), {
         yPercent: -14,
         opacity: 0,
         ease: "none",
@@ -68,7 +68,7 @@ export function Hero({ title, sub, ctaLabel, ctaHref, bigName, tags, placeholder
         },
       });
 
-      // 3) Big outlined studio name slides sideways (parallax depth).
+      // 3) Big studio name slides sideways (parallax depth).
       gsap.to(q(".hero__bigname"), {
         xPercent: -12,
         ease: "none",
@@ -90,12 +90,11 @@ export function Hero({ title, sub, ctaLabel, ctaHref, bigName, tags, placeholder
           {bigName}
         </p>
 
+        <p className="hero__tagline" data-hero>
+          Where Creativity, Design &amp; Technology Rise Together
+        </p>
+
         <div className="container hero__inner">
-          {placeholder && (
-            <p className="tag" data-hero>
-              Placeholder copy
-            </p>
-          )}
           <h1 id="hero-title" className="hero__title">
             <MaskedWords text={title} />
           </h1>

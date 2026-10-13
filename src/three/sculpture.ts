@@ -1,13 +1,15 @@
 import * as THREE from "three";
 import { gsap } from "gsap";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
 import { stageInput } from "@/motion/state";
 import { EASE } from "@/motion/tokens";
 
 // Hero stage: liquid-metal wave background (bronze at the top of the page,
-// sapphire at the bottom), rising forge sparks, and a column of faceted shards.
-// The shards assemble on load, zoom out and turn a full 90 degrees while the
-// hero scrolls, and regroup for the final CTA. No photo: everything is code.
-// The exported names are unchanged, so SculptureStage keeps working.
+// sapphire at the bottom), rising forge sparks, and a standing golden horse
+// statue loaded from /models/bronze_horse.glb. The horse fades in on load,
+// zooms out and turns 90 degrees while the hero scrolls, and faces front again
+// for the final CTA. The exported names are unchanged, so SculptureStage keeps working.
 
 export type PieceDef = { id: string };
 
@@ -24,6 +26,12 @@ type Options = {
   onSlow: () => void;
   onContextLost: () => void;
 };
+
+// ---- Easy knobs to tweak ----
+const HORSE_URL = "/models/bronze_horse.glb";
+const HORSE_SIZE = 3.2; // biggest side of the horse, in scene units
+const HORSE_YAW = -0.6; // starting turn of the horse (radians). Change this if it faces the wrong way.
+const HORSE_COLOR = 0xa87028; // deep golden bronze
 
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 const smooth = (a: number, b: number, x: number) => {
@@ -111,43 +119,6 @@ const FRAGMENT = /* glsl */ `
   }
 `;
 
-const SHARD_VERTEX = /* glsl */ `
-  varying vec3 vN;
-  varying vec3 vV;
-  void main() {
-    vN = normalize(normalMatrix * normal);
-    vec4 mv = modelViewMatrix * vec4(position, 1.0);
-    vV = normalize(-mv.xyz);
-    gl_Position = projectionMatrix * mv;
-  }
-`;
-
-// Faceted metal look: two lights, a bright rim, and a hard specular glint.
-// uMix blends bronze (top of page) into sapphire (bottom of page).
-const SHARD_FRAGMENT = /* glsl */ `
-  uniform float uMix;
-  uniform float uOpacity;
-  varying vec3 vN;
-  varying vec3 vV;
-
-  void main() {
-    vec3 n = normalize(vN);
-    vec3 v = normalize(vV);
-    vec3 l1 = normalize(vec3(-0.5, 0.8, 0.6));
-    vec3 l2 = normalize(vec3(0.7, -0.2, 0.4));
-    float d1 = max(dot(n, l1), 0.0);
-    float d2 = max(dot(n, l2), 0.0);
-
-    vec3 base = mix(vec3(0.70, 0.45, 0.22), vec3(0.22, 0.45, 0.80), uMix);
-    float rim = pow(1.0 - max(dot(n, v), 0.0), 2.5);
-    float spec = pow(max(dot(reflect(-l1, n), v), 0.0), 24.0);
-
-    vec3 col = base * (0.08 + d1 * 0.75 + d2 * 0.25) + base * rim * 0.9;
-    col += vec3(1.0, 0.92, 0.82) * spec * 0.6;
-    gl_FragColor = vec4(col, uOpacity);
-  }
-`;
-
 function makeSparkTexture(): THREE.CanvasTexture {
   const c = document.createElement("canvas");
   c.width = 32;
@@ -165,6 +136,25 @@ function makeSparkTexture(): THREE.CanvasTexture {
   return new THREE.CanvasTexture(c);
 }
 
+function makeGlowTexture(): THREE.CanvasTexture {
+  const c = document.createElement("canvas");
+  c.width = 256;
+  c.height = 256;
+  const ctx = c.getContext("2d");
+  if (ctx) {
+    const g = ctx.createRadialGradient(128, 128, 0, 128, 128, 128);
+    g.addColorStop(0, "rgba(255,240,200,1)");
+    g.addColorStop(0.18, "rgba(255,200,100,0.75)");
+    g.addColorStop(0.5, "rgba(210,120,35,0.28)");
+    g.addColorStop(1, "rgba(0,0,0,0)");
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, 256, 256);
+  }
+  const tex = new THREE.CanvasTexture(c);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  return tex;
+}
+
 export function createSculpture({ canvas, tier, onSlow, onContextLost }: Options): Sculpture {
   const renderer = new THREE.WebGLRenderer({
     canvas,
@@ -173,10 +163,29 @@ export function createSculpture({ canvas, tier, onSlow, onContextLost }: Options
     powerPreference: "high-performance",
   });
   renderer.setClearColor(0x000000, 0);
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 0.85;
 
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 50);
   camera.position.set(0, 0, 6);
+
+  /* ---- Reflections for the metal (built in code, no extra file) ---- */
+  const pmrem = new THREE.PMREMGenerator(renderer);
+  const envRT = pmrem.fromScene(new RoomEnvironment(), 0.04);
+  scene.environment = envRT.texture;
+
+  /* ---- Lights: bright key, cool rim, faint warm fill ---- */
+  scene.add(new THREE.AmbientLight(0xffffff, 0.04));
+  const keyLight = new THREE.DirectionalLight(0xffffff, 2.4);
+  keyLight.position.set(4, 6, 3);
+  scene.add(keyLight);
+  const rimLight = new THREE.DirectionalLight(0xe3f2ff, 2.2);
+  rimLight.position.set(-5, 3, -4);
+  scene.add(rimLight);
+  const fillLight = new THREE.DirectionalLight(0xfff3e6, 0.25);
+  fillLight.position.set(-2, -4, 2);
+  scene.add(fillLight);
 
   /* ---- Background wave shader (full-screen quad) ---- */
   const uniforms = {
@@ -242,54 +251,83 @@ export function createSculpture({ canvas, tier, onSlow, onContextLost }: Options
     blending: THREE.AdditiveBlending,
     depthWrite: false,
     map: sparkTex,
+    toneMapped: false,
   });
   const sparks = new THREE.Points(sparkGeo, sparkMat);
   scene.add(sparks);
 
-  /* ---- Rising shards: a column of faceted diamonds that grow toward the top ---- */
-  const shardCount = tier === "full" ? 7 : 5;
-  const shardGeo = new THREE.OctahedronGeometry(0.5, 0);
-  const shardMat = new THREE.ShaderMaterial({
-    vertexShader: SHARD_VERTEX,
-    fragmentShader: SHARD_FRAGMENT,
-    uniforms: { uMix: { value: 0 }, uOpacity: { value: 0 } },
-    transparent: true,
-    depthWrite: true,
-  });
-
+  /* ---- The golden horse ---- */
   const rig = new THREE.Group();
   scene.add(rig);
 
-  type Shard = {
-    mesh: THREE.Mesh;
-    home: THREE.Vector3;
-    scatter: THREE.Vector3;
-    spin: number;
-    phase: number;
-  };
-  const shards: Shard[] = [];
-  for (let i = 0; i < shardCount; i++) {
-    const mesh = new THREE.Mesh(shardGeo, shardMat);
-    const s = 0.55 + i * 0.13; // each piece bigger than the one below: it "rises"
-    mesh.scale.set(s * 0.55, s * 1.5, s * 0.55);
-    mesh.frustumCulled = false;
-    rig.add(mesh);
-    shards.push({
-      mesh,
-      home: new THREE.Vector3(
-        Math.sin(i * 1.7) * 0.35,
-        (i - (shardCount - 1) / 2) * 0.82,
-        Math.cos(i * 1.3) * 0.35
-      ),
-      scatter: new THREE.Vector3(
-        (Math.random() - 0.5) * 7,
-        -3.5 - Math.random() * 2,
-        (Math.random() - 0.5) * 4
-      ),
-      spin: (i % 2 ? 1 : -1) * (0.18 + Math.random() * 0.15),
-      phase: Math.random() * Math.PI * 2,
-    });
-  }
+  // Warm glow that sits behind the horse (hero) and bursts open at the final CTA.
+  const glowTex = makeGlowTexture();
+  const glowMat = new THREE.SpriteMaterial({
+    map: glowTex,
+    color: 0xffffff,
+    transparent: true,
+    opacity: 0,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false,
+    toneMapped: false,
+  });
+  const glow = new THREE.Sprite(glowMat);
+  glow.frustumCulled = false;
+  scene.add(glow);
+
+  const horseMat = new THREE.MeshStandardMaterial({
+    color: HORSE_COLOR,
+    metalness: 0.92,
+    roughness: 0.42,
+    envMapIntensity: 0.4,
+    transparent: true,
+    opacity: 0,
+  });
+
+  let horse: THREE.Group | null = null; // sits inside the rig, centred on its middle
+  const horseGeos: THREE.BufferGeometry[] = [];
+
+  const loader = new GLTFLoader();
+  loader.load(
+    HORSE_URL,
+    (gltf) => {
+      const model = gltf.scene;
+      if (disposed) {
+        model.traverse((child) => {
+          const m = child as THREE.Mesh;
+          if (m.isMesh) m.geometry.dispose();
+        });
+        return;
+      }
+      model.traverse((child) => {
+        const m = child as THREE.Mesh;
+        if (m.isMesh) {
+          m.material = horseMat;
+          m.frustumCulled = false;
+          horseGeos.push(m.geometry);
+        }
+      });
+
+      // Scale so the biggest side equals HORSE_SIZE, then centre it exactly.
+      const box1 = new THREE.Box3().setFromObject(model);
+      const size1 = box1.getSize(new THREE.Vector3());
+      const maxDim = Math.max(size1.x, size1.y, size1.z);
+      model.scale.setScalar(HORSE_SIZE / (maxDim > 0.0001 ? maxDim : 1));
+      model.updateMatrixWorld(true);
+      const box2 = new THREE.Box3().setFromObject(model);
+      const center = box2.getCenter(new THREE.Vector3());
+      model.position.sub(center);
+
+      const pivot = new THREE.Group();
+      pivot.add(model);
+      rig.add(pivot);
+      horse = pivot;
+    },
+    undefined,
+    (err) => {
+      console.error("Could not load the horse model:", err);
+    }
+  );
 
   /* ---- Size ---- */
   const size = new THREE.Vector2();
@@ -379,37 +417,47 @@ export function createSculpture({ canvas, tier, onSlow, onContextLost }: Options
     const ce = smooth(0, 1, stageInput.ctaProgress);
     canvas.style.opacity = String(lerp(1 - 0.65 * smooth(0.7, 1, p), 0.7, ce));
 
-    // Shards: start close up, zoom out and turn a full 90 degrees while the hero
-    // scrolls, then lift away. Scrolling back up reverses it. At the final CTA
-    // they regroup in the centre, facing front.
+    // Horse: starts close up, zooms out and turns 90 degrees while the hero
+    // scrolls, then lifts away. Scrolling back up reverses it. At the final CTA
+    // it comes back to the centre.
     const z = smooth(0, 0.7, p);
     const rise = smooth(0.7, 1, p) * 1.4;
-    const spread = z * 0.8 * (1 - ce);
 
-    for (let i = 0; i < shardCount; i++) {
-      const s = shards[i];
-      const k = smooth(i * 0.07, i * 0.07 + 0.65, state.intro); // staggered assemble
-      const bob = Math.sin(t * 0.9 + s.phase) * 0.04;
-      s.mesh.position.set(
-        lerp(s.scatter.x, s.home.x * (1 + spread), k),
-        lerp(s.scatter.y, s.home.y * (1 + spread) + bob, k),
-        lerp(s.scatter.z, s.home.z * (1 + spread), k)
-      );
-      s.mesh.rotation.y = t * s.spin + s.phase;
-      s.mesh.rotation.z = (1 - k) * 1.2;
+    if (horse) {
+      const k = smooth(0, 1, state.intro);
+      const bob = Math.sin(t * 0.9) * 0.04;
+      horse.position.y = lerp(-1.0, 0, k) + bob;
     }
+    // Visibility: the horse fades out completely as the hero ends (when the
+    // services line arrives), then at the final CTA it comes back out of a big
+    // glow and zooms toward you.
+    const heroVis = 1 - smooth(0.6, 0.95, p);
+    const ctaVis = smooth(0.2, 0.8, ce);
+    horseMat.opacity = Math.max(heroVis * (1 - ce), ctaVis) * state.intro;
+
+    const cm = smooth(0, 0.03, ce); // switches the CTA behaviour on cleanly
+    const ceE = smooth(0.05, 1, ce); // zoom-in progress at the CTA
 
     let sc = lerp(baseScale * 1.5, baseScale * 0.85, z);
     sc = lerp(sc, wide ? baseScale * 0.9 : baseScale * 0.75, ce);
     const px = lerp(baseX, 0, ce);
     const py = lerp(baseY, wide ? 0 : 0.5, ce) + rise;
-    rig.position.set(px, py, 0);
-    rig.scale.setScalar(sc * (0.94 + 0.06 * state.intro));
-    rig.rotation.y = z * (Math.PI / 2) * (1 - ce) + cur.x * 0.15;
-    rig.rotation.x = -cur.y * 0.08;
+    const pz = lerp(0, lerp(-2.5, 0.8, ceE), cm); // starts behind the glow, ends in front
+    const zoomMul = lerp(1, lerp(0.45, 1.1, ceE), cm);
 
-    shardMat.uniforms.uMix.value = pageScroll;
-    shardMat.uniforms.uOpacity.value = state.intro;
+    // Glow: soft and breathing behind the horse in the hero, big burst at the CTA.
+    const heroGlow = (0.5 + 0.08 * Math.sin(t * 1.3)) * heroVis * (1 - ce);
+    const ctaGlow = smooth(0, 0.3, ce) * (1 - 0.3 * smooth(0.55, 1, ce));
+    glowMat.opacity = Math.max(heroGlow, ctaGlow) * state.intro;
+    const burstMul = lerp(1, lerp(2.4, 1.5, ceE), cm);
+    const glowSize = 6 * sc * burstMul;
+    glow.position.set(px, py, -1.2);
+    glow.scale.set(glowSize, glowSize, 1);
+
+    rig.position.set(px, py, pz);
+    rig.scale.setScalar(sc * zoomMul * (0.94 + 0.06 * state.intro));
+    rig.rotation.y = HORSE_YAW + z * (Math.PI / 2) * (1 - ce) + cur.x * 0.15;
+    rig.rotation.x = -cur.y * 0.08;
 
     renderer.render(scene, camera);
 
@@ -434,7 +482,7 @@ export function createSculpture({ canvas, tier, onSlow, onContextLost }: Options
   tick(0, 16); // draw once so the canvas is sized and ready
 
   return {
-    // Kept the old name: fades the stage in and assembles the shards.
+    // Kept the old name: fades the stage in and brings the horse up.
     assemble: () => {
       if (disposed) return;
       gsap.to(state, { intro: 1, duration: 2.2, ease: EASE.inOut, overwrite: true });
@@ -454,8 +502,12 @@ export function createSculpture({ canvas, tier, onSlow, onContextLost }: Options
       sparkGeo.dispose();
       sparkMat.dispose();
       sparkTex.dispose();
-      shardGeo.dispose();
-      shardMat.dispose();
+      horseGeos.forEach((g) => g.dispose());
+      horseMat.dispose();
+      glowMat.dispose();
+      glowTex.dispose();
+      envRT.dispose();
+      pmrem.dispose();
       renderer.dispose();
     },
   };

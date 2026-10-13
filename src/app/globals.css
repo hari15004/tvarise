@@ -519,10 +519,20 @@ html[data-intro="on"] .intro__name-inner {
   font-weight: 700;
   font-size: clamp(3rem, 14vw, 14rem);
   line-height: 0.9;
-  letter-spacing: -0.05em;
+  letter-spacing: -0.03em;
   white-space: nowrap;
+  background: linear-gradient(
+    180deg,
+    #ffffff 0%,
+    #fff6e3 55%,
+    #f3dba6 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
   color: transparent;
-  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.16);
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 16px rgba(255, 205, 120, 0.35))
+    drop-shadow(0 0 56px rgba(210, 140, 50, 0.25));
   pointer-events: none;
   user-select: none;
 }
@@ -745,4 +755,17 @@ html[data-cursor="on"] .cursor {
   .btn:hover {
     transform: none;
   }
+}
+
+.hero__tagline {
+  position: absolute;
+  left: var(--gutter);
+  top: calc(var(--nav-h) + 3vh + clamp(2.7rem, 12.6vw, 12.6rem) + 2.75rem);
+  z-index: 2;
+  max-width: min(48rem, 88vw);
+  font-size: clamp(1.4rem, 2.6vw, 2.4rem);
+  line-height: 1.4;
+  letter-spacing: 0.01em;
+  color: rgba(255, 255, 255, 0.88);
+  pointer-events: none;
 }
