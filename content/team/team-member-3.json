@@ -1,0 +1,13 @@
+{
+  "placeholder": true,
+  "slug": "team-member-3",
+  "name": "Team Member 3",
+  "role": "Web Designer",
+  "shortLine": "Placeholder line.",
+  "bio": "Placeholder bio.",
+  "portrait": null,
+  "links": [],
+  "pieceId": "piece-web",
+  "order": 3,
+  "published": true
+}

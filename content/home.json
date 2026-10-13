@@ -1,0 +1,44 @@
+{
+  "placeholder": true,
+  "about": {
+    "label": "Who we are",
+    "title": "The name says it.",
+    "text": "Tvarise comes from \"tvar\" (speed) and \"rise\" (up). Placeholder: the rest of the studio story will be written with the team."
+  },
+  "why": [
+    {
+      "title": "Placeholder point one",
+      "text": "Placeholder description. Real copy comes from the team."
+    },
+    {
+      "title": "Placeholder point two",
+      "text": "Placeholder description. Real copy comes from the team."
+    },
+    {
+      "title": "Placeholder point three",
+      "text": "Placeholder description. Real copy comes from the team."
+    }
+  ],
+  "process": [
+    {
+      "title": "Discover",
+      "text": "Placeholder description of this step."
+    },
+    {
+      "title": "Design",
+      "text": "Placeholder description of this step."
+    },
+    {
+      "title": "Build",
+      "text": "Placeholder description of this step."
+    },
+    {
+      "title": "Launch",
+      "text": "Placeholder description of this step."
+    }
+  ],
+  "cta": {
+    "title": "Let's build something that rises.",
+    "text": "Placeholder text. Tell us what you want to make."
+  }
+}

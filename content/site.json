@@ -1,0 +1,35 @@
+{
+  "placeholder": true,
+  "name": "Tvarise",
+  "tagline": "Placeholder tagline for Tvarise, a multidisciplinary creative and digital studio.",
+  "heroTitle": "Built fast. Made to rise.",
+  "heroSubtitle": "Placeholder copy. Final headline and intro will be written with the team.",
+  "contactEmail": "placeholder@example.com",
+  "nav": [
+    {
+      "label": "Work",
+      "href": "/work"
+    },
+    {
+      "label": "Services",
+      "href": "/services"
+    },
+    {
+      "label": "Team",
+      "href": "/team"
+    },
+    {
+      "label": "About",
+      "href": "/about"
+    },
+    {
+      "label": "Contact",
+      "href": "/contact"
+    }
+  ],
+  "cta": {
+    "label": "Let's Work",
+    "href": "/contact"
+  },
+  "social": []
+}

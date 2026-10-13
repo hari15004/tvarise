@@ -1,0 +1,13 @@
+{
+  "placeholder": true,
+  "slug": "team-member-4",
+  "name": "Team Member 4",
+  "role": "3D Designer + 3D Animation",
+  "shortLine": "Placeholder line.",
+  "bio": "Placeholder bio.",
+  "portrait": null,
+  "links": [],
+  "pieceId": "piece-3d",
+  "order": 4,
+  "published": true
+}

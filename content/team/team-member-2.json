@@ -1,0 +1,13 @@
+{
+  "placeholder": true,
+  "slug": "team-member-2",
+  "name": "Team Member 2",
+  "role": "App Designer",
+  "shortLine": "Placeholder line.",
+  "bio": "Placeholder bio.",
+  "portrait": null,
+  "links": [],
+  "pieceId": "piece-app",
+  "order": 2,
+  "published": true
+}
