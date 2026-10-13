@@ -86,13 +86,9 @@ export function SculptureStage({ pieces }: { pieces: PieceDef[] }) {
   return (
     <div className="stage" aria-hidden="true">
       <canvas ref={canvasRef} className="stage__canvas" />
-      {/* Static tier fallback: a simple still of the same idea. */}
-      <svg className="stage__static" viewBox="0 0 400 400" fill="none" stroke="currentColor" strokeWidth="1.5">
-        <polygon points="200,60 270,150 130,150" />
-        <circle cx="290" cy="240" r="48" />
-        <polygon points="110,210 170,250 150,320 90,290" />
-        <polygon points="220,300 260,330 240,370 200,370 180,330" />
-      </svg>
+      {/* Static tier fallback: the same character as a still picture. */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img className="stage__static" src="/hero/doom.jpg" alt="" />
     </div>
   );
 }

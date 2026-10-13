@@ -408,11 +408,14 @@ html[data-motion="on"][data-nav-in] .nav__inner {
 .stage__static {
   display: none;
   position: absolute;
-  right: 6%;
-  top: 16%;
-  width: min(46vw, 460px);
-  color: var(--accent);
-  opacity: 0.5;
+  right: 3%;
+  top: 6%;
+  height: 88vh;
+  width: auto;
+  max-width: 90vw;
+  opacity: 0.85;
+  -webkit-mask-image: radial-gradient(ellipse at center, #000 52%, transparent 98%);
+  mask-image: radial-gradient(ellipse at center, #000 52%, transparent 98%);
 }
 html[data-tier="static"] .stage__canvas {
   display: none;

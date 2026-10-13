@@ -3,11 +3,11 @@ import { gsap } from "gsap";
 import { stageInput } from "@/motion/state";
 import { EASE } from "@/motion/tokens";
 
-// Atmosphere stage: a slow liquid-metal wave shader (bronze at the top of the
-// page, sapphire at the bottom), rising forge sparks, and a liquid-metal hero
-// object with orbiting rings. This replaces the
-// old placeholder solids. The exported names are unchanged, so SculptureStage
-// and the rest of the app keep working. A real 3D model can be added later.
+// Hero stage: liquid-metal wave background (bronze at the top of the page,
+// sapphire at the bottom), rising forge sparks, and a column of faceted shards.
+// The shards assemble on load, zoom out and turn a full 90 degrees while the
+// hero scrolls, and regroup for the final CTA. No photo: everything is code.
+// The exported names are unchanged, so SculptureStage keeps working.
 
 export type PieceDef = { id: string };
 
@@ -111,64 +111,40 @@ const FRAGMENT = /* glsl */ `
   }
 `;
 
-
-const OBJ_VERTEX = /* glsl */ `
-  uniform float uTime;
-  uniform float uAmp;
-  varying vec3 vWN;
-  varying vec3 vWP;
-
-  vec3 displace(vec3 p) {
-    float t = uTime * 0.35;
-    float n = sin(p.x * 2.1 + t) * sin(p.y * 2.5 + t * 1.2) * sin(p.z * 2.3 - t * 0.9) * 0.28
-            + sin(p.x * 4.6 - t * 1.6 + p.y * 3.1) * 0.06
-            + sin(p.y * 5.2 + p.z * 4.1 + t * 1.3) * 0.04;
-    return p * (1.0 + n * uAmp);
-  }
-
+const SHARD_VERTEX = /* glsl */ `
+  varying vec3 vN;
+  varying vec3 vV;
   void main() {
-    vec3 nrm = normalize(position);
-    vec3 up = abs(nrm.y) > 0.99 ? vec3(1.0, 0.0, 0.0) : vec3(0.0, 1.0, 0.0);
-    vec3 tang = normalize(cross(up, nrm));
-    vec3 bit = cross(nrm, tang);
-    float e = 0.02;
-    vec3 p0 = displace(nrm);
-    vec3 p1 = displace(normalize(nrm + tang * e));
-    vec3 p2 = displace(normalize(nrm + bit * e));
-    vec3 nn = normalize(cross(p1 - p0, p2 - p0));
-    vWN = normalize(mat3(modelMatrix) * nn);
-    vec4 wp = modelMatrix * vec4(p0, 1.0);
-    vWP = wp.xyz;
-    gl_Position = projectionMatrix * viewMatrix * wp;
+    vN = normalize(normalMatrix * normal);
+    vec4 mv = modelViewMatrix * vec4(position, 1.0);
+    vV = normalize(-mv.xyz);
+    gl_Position = projectionMatrix * mv;
   }
 `;
 
-const OBJ_FRAGMENT = /* glsl */ `
-  uniform float uTime;
-  uniform float uIntro;
-  varying vec3 vWN;
-  varying vec3 vWP;
+// Faceted metal look: two lights, a bright rim, and a hard specular glint.
+// uMix blends bronze (top of page) into sapphire (bottom of page).
+const SHARD_FRAGMENT = /* glsl */ `
+  uniform float uMix;
+  uniform float uOpacity;
+  varying vec3 vN;
+  varying vec3 vV;
 
   void main() {
-    vec3 n = normalize(vWN);
-    vec3 v = normalize(cameraPosition - vWP);
-    vec3 r = reflect(-v, n);
-    float fres = pow(1.0 - max(dot(n, v), 0.0), 3.0);
+    vec3 n = normalize(vN);
+    vec3 v = normalize(vV);
+    vec3 l1 = normalize(vec3(-0.5, 0.8, 0.6));
+    vec3 l2 = normalize(vec3(0.7, -0.2, 0.4));
+    float d1 = max(dot(n, l1), 0.0);
+    float d2 = max(dot(n, l2), 0.0);
 
-    float bands = sin(r.y * 7.0 + r.x * 3.0 + uTime * 0.4) * 0.5 + 0.5;
-    float bands2 = sin(r.y * 13.0 - r.z * 4.0 - uTime * 0.3) * 0.5 + 0.5;
-    vec3 warm = vec3(1.0, 0.58, 0.26);
-    vec3 cool = vec3(0.30, 0.58, 1.0);
-    vec3 tint = mix(warm, cool, smoothstep(-0.4, 0.5, r.x));
-    float studio = smoothstep(0.55, 0.95, bands) * 0.9 + smoothstep(0.8, 0.98, bands2) * 0.6;
+    vec3 base = mix(vec3(0.70, 0.45, 0.22), vec3(0.22, 0.45, 0.80), uMix);
+    float rim = pow(1.0 - max(dot(n, v), 0.0), 2.5);
+    float spec = pow(max(dot(reflect(-l1, n), v), 0.0), 24.0);
 
-    vec3 col = vec3(0.015, 0.015, 0.02) + tint * studio;
-    vec3 l = normalize(vec3(0.5, 0.8, 0.6));
-    float spec = pow(max(dot(r, l), 0.0), 40.0);
-    col += vec3(1.0, 0.92, 0.85) * spec * 1.2;
-    col += tint * fres * 0.8;
-
-    gl_FragColor = vec4(col * uIntro, 1.0);
+    vec3 col = base * (0.08 + d1 * 0.75 + d2 * 0.25) + base * rim * 0.9;
+    col += vec3(1.0, 0.92, 0.82) * spec * 0.6;
+    gl_FragColor = vec4(col, uOpacity);
   }
 `;
 
@@ -192,7 +168,7 @@ function makeSparkTexture(): THREE.CanvasTexture {
 export function createSculpture({ canvas, tier, onSlow, onContextLost }: Options): Sculpture {
   const renderer = new THREE.WebGLRenderer({
     canvas,
-    antialias: false,
+    antialias: tier === "full",
     alpha: true,
     powerPreference: "high-performance",
   });
@@ -270,36 +246,50 @@ export function createSculpture({ canvas, tier, onSlow, onContextLost }: Options
   const sparks = new THREE.Points(sparkGeo, sparkMat);
   scene.add(sparks);
 
-  /* ---- Hero object: liquid-metal blob + orbiting rings ---- */
+  /* ---- Rising shards: a column of faceted diamonds that grow toward the top ---- */
+  const shardCount = tier === "full" ? 7 : 5;
+  const shardGeo = new THREE.OctahedronGeometry(0.5, 0);
+  const shardMat = new THREE.ShaderMaterial({
+    vertexShader: SHARD_VERTEX,
+    fragmentShader: SHARD_FRAGMENT,
+    uniforms: { uMix: { value: 0 }, uOpacity: { value: 0 } },
+    transparent: true,
+    depthWrite: true,
+  });
+
   const rig = new THREE.Group();
   scene.add(rig);
-  const objUniforms = {
-    uTime: { value: 0 },
-    uAmp: { value: 1 },
-    uIntro: { value: 0 },
-  };
-  const blobGeo = new THREE.IcosahedronGeometry(1, tier === "full" ? 32 : 14);
-  const blobMat = new THREE.ShaderMaterial({
-    vertexShader: OBJ_VERTEX,
-    fragmentShader: OBJ_FRAGMENT,
-    uniforms: objUniforms,
-  });
-  const blob = new THREE.Mesh(blobGeo, blobMat);
-  blob.frustumCulled = false;
-  rig.add(blob);
 
-  const ringMat = new THREE.MeshBasicMaterial({
-    color: 0xd9a066,
-    transparent: true,
-    opacity: 0,
-    blending: THREE.AdditiveBlending,
-    depthWrite: false,
-  });
-  const ring1Geo = new THREE.TorusGeometry(1.7, 0.006, 8, 180);
-  const ring2Geo = new THREE.TorusGeometry(2.0, 0.005, 8, 180);
-  const ring1 = new THREE.Mesh(ring1Geo, ringMat);
-  const ring2 = new THREE.Mesh(ring2Geo, ringMat);
-  rig.add(ring1, ring2);
+  type Shard = {
+    mesh: THREE.Mesh;
+    home: THREE.Vector3;
+    scatter: THREE.Vector3;
+    spin: number;
+    phase: number;
+  };
+  const shards: Shard[] = [];
+  for (let i = 0; i < shardCount; i++) {
+    const mesh = new THREE.Mesh(shardGeo, shardMat);
+    const s = 0.55 + i * 0.13; // each piece bigger than the one below: it "rises"
+    mesh.scale.set(s * 0.55, s * 1.5, s * 0.55);
+    mesh.frustumCulled = false;
+    rig.add(mesh);
+    shards.push({
+      mesh,
+      home: new THREE.Vector3(
+        Math.sin(i * 1.7) * 0.35,
+        (i - (shardCount - 1) / 2) * 0.82,
+        Math.cos(i * 1.3) * 0.35
+      ),
+      scatter: new THREE.Vector3(
+        (Math.random() - 0.5) * 7,
+        -3.5 - Math.random() * 2,
+        (Math.random() - 0.5) * 4
+      ),
+      spin: (i % 2 ? 1 : -1) * (0.18 + Math.random() * 0.15),
+      phase: Math.random() * Math.PI * 2,
+    });
+  }
 
   /* ---- Size ---- */
   const size = new THREE.Vector2();
@@ -319,13 +309,13 @@ export function createSculpture({ canvas, tier, onSlow, onContextLost }: Options
     wide = camera.aspect > 1.1;
     const halfW = 6 * Math.tan((25 * Math.PI) / 180) * camera.aspect;
     baseX = wide ? Math.min(2.5, halfW * 0.5) : 0;
-    baseY = wide ? -0.1 : 1.7;
-    baseScale = wide ? Math.min(1.0, camera.aspect * 0.6) : 0.75;
+    baseY = wide ? 0 : 1.5;
+    baseScale = wide ? Math.min(0.8, camera.aspect * 0.45) : 0.5;
   };
   layout();
   window.addEventListener("resize", layout);
 
-  /* ---- Frame loop (GSAP ticker, same as before) ---- */
+  /* ---- Frame loop (GSAP ticker) ---- */
   const state = { intro: 0 };
   let t = 0;
   let active = true;
@@ -389,23 +379,37 @@ export function createSculpture({ canvas, tier, onSlow, onContextLost }: Options
     const ce = smooth(0, 1, stageInput.ctaProgress);
     canvas.style.opacity = String(lerp(1 - 0.65 * smooth(0.7, 1, p), 0.7, ce));
 
-    // Hero object placement (same scroll choreography as before)
-    const pe = smooth(0, 1, p);
-    const spread = pe * (1 - ce);
-    rig.position.set(
-      lerp(baseX - (baseX > 0 ? pe * 1.4 : 0), 0, ce),
-      lerp(baseY + pe * 1.6, wide ? 0.2 : 0.9, ce),
-      lerp(-pe * 1.5, 0, ce),
-    );
-    rig.scale.setScalar(lerp(baseScale * (1 - pe * 0.2), wide ? 1.3 : 0.95, ce) * (0.35 + 0.65 * state.intro));
-    rig.rotation.y = t * 0.12 + cur.x * 0.4 + spread * 1.2;
-    rig.rotation.x = -cur.y * 0.25 + spread * 0.3;
-    objUniforms.uTime.value = t;
-    objUniforms.uAmp.value = Math.min(2, 1 + velocity * 6);
-    objUniforms.uIntro.value = state.intro;
-    ring1.rotation.set(t * 0.25, t * 0.15, 0);
-    ring2.rotation.set(1.1 + Math.sin(t * 0.3) * 0.2, 0, -t * 0.2);
-    ringMat.opacity = 0.5 * state.intro;
+    // Shards: start close up, zoom out and turn a full 90 degrees while the hero
+    // scrolls, then lift away. Scrolling back up reverses it. At the final CTA
+    // they regroup in the centre, facing front.
+    const z = smooth(0, 0.7, p);
+    const rise = smooth(0.7, 1, p) * 1.4;
+    const spread = z * 0.8 * (1 - ce);
+
+    for (let i = 0; i < shardCount; i++) {
+      const s = shards[i];
+      const k = smooth(i * 0.07, i * 0.07 + 0.65, state.intro); // staggered assemble
+      const bob = Math.sin(t * 0.9 + s.phase) * 0.04;
+      s.mesh.position.set(
+        lerp(s.scatter.x, s.home.x * (1 + spread), k),
+        lerp(s.scatter.y, s.home.y * (1 + spread) + bob, k),
+        lerp(s.scatter.z, s.home.z * (1 + spread), k)
+      );
+      s.mesh.rotation.y = t * s.spin + s.phase;
+      s.mesh.rotation.z = (1 - k) * 1.2;
+    }
+
+    let sc = lerp(baseScale * 1.5, baseScale * 0.85, z);
+    sc = lerp(sc, wide ? baseScale * 0.9 : baseScale * 0.75, ce);
+    const px = lerp(baseX, 0, ce);
+    const py = lerp(baseY, wide ? 0 : 0.5, ce) + rise;
+    rig.position.set(px, py, 0);
+    rig.scale.setScalar(sc * (0.94 + 0.06 * state.intro));
+    rig.rotation.y = z * (Math.PI / 2) * (1 - ce) + cur.x * 0.15;
+    rig.rotation.x = -cur.y * 0.08;
+
+    shardMat.uniforms.uMix.value = pageScroll;
+    shardMat.uniforms.uOpacity.value = state.intro;
 
     renderer.render(scene, camera);
 
@@ -430,7 +434,7 @@ export function createSculpture({ canvas, tier, onSlow, onContextLost }: Options
   tick(0, 16); // draw once so the canvas is sized and ready
 
   return {
-    // Kept the old name: fades the stage in once the intro is done.
+    // Kept the old name: fades the stage in and assembles the shards.
     assemble: () => {
       if (disposed) return;
       gsap.to(state, { intro: 1, duration: 2.2, ease: EASE.inOut, overwrite: true });
@@ -450,11 +454,8 @@ export function createSculpture({ canvas, tier, onSlow, onContextLost }: Options
       sparkGeo.dispose();
       sparkMat.dispose();
       sparkTex.dispose();
-      blobGeo.dispose();
-      blobMat.dispose();
-      ring1Geo.dispose();
-      ring2Geo.dispose();
-      ringMat.dispose();
+      shardGeo.dispose();
+      shardMat.dispose();
       renderer.dispose();
     },
   };
