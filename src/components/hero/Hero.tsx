@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef } from "react";
+import { Fragment, useEffect, useRef } from "react";
 import { gsap, ScrollTrigger } from "@/motion/gsap";
 import { getTier, onIntroDone, stageInput } from "@/motion/state";
 import { EASE, STAGGER } from "@/motion/tokens";
@@ -17,6 +17,8 @@ type Props = {
   placeholder: boolean;
 };
 
+const TAGLINE = "Where Creativity, Design & Technology Rise Together";
+
 export function Hero({ title, sub, ctaLabel, ctaHref, bigName, tags }: Props) {
   const rootRef = useRef<HTMLElement>(null);
 
@@ -28,9 +30,17 @@ export function Hero({ title, sub, ctaLabel, ctaHref, bigName, tags }: Props) {
     let offIntro: () => void = () => {};
 
     const ctx = gsap.context((self) => {
-      // Entrance: runs once the intro is done (immediately for returning visitors).
+      // Tagline typing: letters appear one by one. Paused until the entrance plays.
+      const typing = gsap
+        .timeline({ paused: true })
+        .fromTo(q(".hero__char"), { opacity: 0 }, { opacity: 1, duration: 0.02, stagger: 0.03, ease: "none" }, 0.5);
+
+      // Entrance: headline words slide up, items fade up, tagline types in.
+      // It runs after the intro, and again every time the visitor scrolls back to the top.
+      let entrance: gsap.core.Timeline | null = null;
       const play = () => {
-        gsap
+        entrance?.kill();
+        entrance = gsap
           .timeline({ defaults: { ease: EASE.out } })
           .fromTo(q("[data-mask]"), { yPercent: 110 }, { yPercent: 0, duration: 1.1, stagger: STAGGER.words }, 0)
           .fromTo(
@@ -39,8 +49,19 @@ export function Hero({ title, sub, ctaLabel, ctaHref, bigName, tags }: Props) {
             { y: 0, opacity: 1, duration: 0.9, stagger: STAGGER.items },
             0.45,
           );
+        typing.timeScale(1).play(0);
       };
       offIntro = onIntroDone(() => self.add(play));
+
+      // Leaving the top: the tagline erases itself. Coming back to the top: everything plays again.
+      ScrollTrigger.create({
+        trigger: root,
+        start: "top+=40 top",
+        onEnter: () => {
+          typing.timeScale(3).reverse();
+        },
+        onLeaveBack: () => self.add(play),
+      });
 
       // Scroll: the hero is a tall section with a sticky screen inside it.
       // 1) Sculpture reads the progress (assemble, explode, drift).
@@ -54,8 +75,8 @@ export function Hero({ title, sub, ctaLabel, ctaHref, bigName, tags }: Props) {
         },
       });
 
-      // 2) Text and tagline drift up and fade out during the first part of the scroll.
-      gsap.to(q(".hero__inner, .hero__tagline"), {
+      // 2) Text drifts up and fades out during the first part of the scroll.
+      gsap.to(q(".hero__inner"), {
         yPercent: -14,
         opacity: 0,
         ease: "none",
@@ -83,6 +104,8 @@ export function Hero({ title, sub, ctaLabel, ctaHref, bigName, tags }: Props) {
     };
   }, []);
 
+  const words = TAGLINE.split(" ");
+
   return (
     <section ref={rootRef} className="hero" aria-labelledby="hero-title">
       <div className="hero__sticky">
@@ -90,8 +113,19 @@ export function Hero({ title, sub, ctaLabel, ctaHref, bigName, tags }: Props) {
           {bigName}
         </p>
 
-        <p className="hero__tagline" data-hero>
-          Where Creativity, Design &amp; Technology Rise Together
+        <p className="hero__tagline" aria-label={TAGLINE}>
+          {words.map((word, wi) => (
+            <Fragment key={wi}>
+              <span aria-hidden="true" style={{ display: "inline-block", whiteSpace: "nowrap" }}>
+                {word.split("").map((ch, ci) => (
+                  <span key={ci} className="hero__char">
+                    {ch}
+                  </span>
+                ))}
+              </span>
+              {wi < words.length - 1 ? " " : null}
+            </Fragment>
+          ))}
         </p>
 
         <div className="container hero__inner">

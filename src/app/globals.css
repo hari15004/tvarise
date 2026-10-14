@@ -762,7 +762,7 @@ html[data-cursor="on"] .cursor {
   left: var(--gutter);
   top: calc(var(--nav-h) + 3vh + clamp(2.7rem, 12.6vw, 12.6rem) + 2.75rem);
   z-index: 2;
-  max-width: min(48rem, 88vw);
+  max-width: clamp(14rem, 30vw, 34rem);
   font-size: clamp(1.4rem, 2.6vw, 2.4rem);
   line-height: 1.4;
   letter-spacing: 0.01em;
