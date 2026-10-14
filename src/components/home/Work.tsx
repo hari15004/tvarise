@@ -27,7 +27,6 @@ export function Work({ index, items }: { index: string; items: Project[] }) {
                 <div className="work-card__body" data-reveal>
                   <h3 className="work-card__title">{project.title}</h3>
                   <p className="work-card__text">{project.summary}</p>
-                  {project.placeholder && <span className="tag">Placeholder</span>}
                 </div>
               </Link>
             </li>

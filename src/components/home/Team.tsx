@@ -25,7 +25,6 @@ export function Team({ index, members }: { index: string; members: TeamMember[] 
               <div className="team-card__body" data-reveal>
                 <h3 className="team-card__name">{member.name}</h3>
                 <p className="team-card__role">{member.role}</p>
-                {member.placeholder && <span className="tag">Placeholder</span>}
               </div>
             </li>
           ))}

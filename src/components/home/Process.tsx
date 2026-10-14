@@ -25,11 +25,6 @@ export function Process({ index, steps, placeholder }: { index: string; steps: S
             ))}
           </ol>
         </div>
-        {placeholder && (
-          <p className="tag" data-reveal>
-            Placeholder steps
-          </p>
-        )}
       </div>
     </section>
   );

@@ -121,3 +121,11 @@ Tune visual style from owner screenshots of the reference; Sculpture separation 
 - The unused backspace() function is still in Hero.tsx and may cause a lint warning.
 - The hero line "Placeholder copy. Final headline and intro..." was not found in src or content, it may already be gone. The only remaining "Placeholder copy" tag is in About.tsx (shown when content.placeholder is true).
 - Next task: redesign Services ("What we do") from bento cards into large rows (big number + big title, hover expands summary and includes, line draws on scroll, stacked rows on mobile). Not started yet. Do not paste it before checking .bento and .card CSS in globals.css.
+
+## UPDATE 2026-10-14 (latest, overrides the Services plan above)
+- Services ("What we do") is now a sticky card stack (owner picked it from 4 mockups). It replaces the row/hover-expand plan above. Markup in src/components/home/Services.tsx (classes svc, svc__card, svc__inner, svc__top, svc__n, svc__count, svc__title, svc__text, svc__list; each card gets a --i CSS variable). CSS is under "Services: rows" in src/app/home.css. Old .bento CSS is removed. .card classes are untouched.
+- Owner confirmed in the browser that Services looks fine. Not yet checked: prefers-reduced-motion and the full/lite/static tier behaviour for the stack (it only uses position: sticky and the existing data-reveal).
+- All visible "Placeholder" tags were removed from Team, Work, Services, Footer, About and Process. The "placeholder": true flags in /content JSON were kept on purpose, because site.placeholder drives the noindex robots rule in layout.tsx.
+- Process.tsx still receives a placeholder prop that is now unused, and page.tsx still passes it. Clean up later if lint complains.
+- Placeholder TEXT inside content JSON (e.g. "Placeholder description", "Placeholder Project 01") still shows on screen until the team gives real copy. Do not invent copy.
+- Build passes (npm run build, 7 routes).

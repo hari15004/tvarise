@@ -20,11 +20,6 @@ export function About({ index, content }: { index: string; content: HomeContent 
             ))}
           </ul>
         )}
-        {content.placeholder && (
-          <p className="tag" data-reveal>
-            Placeholder copy
-          </p>
-        )}
       </div>
     </section>
   );

@@ -43,7 +43,6 @@ export function Footer({ site }: { site: SiteSettings }) {
         <p>
           © <CurrentYear /> {site.name}
         </p>
-        {site.placeholder && <p className="tag">Placeholder content</p>}
       </div>
     </footer>
   );
