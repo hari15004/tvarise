@@ -2,7 +2,7 @@
 
 **Every AI developer MUST read this file before touching the project, then the relevant parts of `PROJECT_SPEC.md`.** Update this file after every meaningful change.
 
-Last updated: 2026-10-12
+Last updated: 2026-10-14
 
 ## PROJECT NAME
 Tvarise (tvar = speed, rise = up)
@@ -105,3 +105,13 @@ Owner verifies Home Chunk 2 locally.
 
 ## NEXT RECOMMENDED TASK
 Tune visual style from owner screenshots of the reference; Sculpture separation during Services; Work index + case-study template; Contact flow; hero video option.
+
+## UPDATE 2026-10-14 (read this first; it overrides older lines above)
+- Build passes locally (npm install clean, npm run build OK, 7 routes). Live site: https://tvarise.vercel.app/ (noindex while content is placeholder). Repo: herry1404/tvarise, branch main.
+- Home Chunk 2 sections exist in src/components/home/ and show on the live site with placeholder content. PROGRESS.md boxes are still unticked. Older lines above saying src/three, src/motion or home sections do not exist are outdated.
+- Sculpture is now a golden-bronze horse loaded from public/models/bronze_horse.glb (replaces the shards). Knobs at the top of src/three/sculpture.ts: HORSE_URL, HORSE_SIZE, HORSE_YAW, HORSE_COLOR.
+- Warm glow sits behind the horse. Horse and glow fade out when the hero ends. At the final CTA the glow bursts and the horse zooms in from behind it.
+- Big "Tvarise" name (.hero__bigname in globals.css) is solid white with a light golden tint and soft glow. Tagline "Where Creativity, Design & Technology Rise Together" sits under it (.hero__tagline, CSS appended at the end of globals.css). The hero "Placeholder copy" tag was removed from Hero.tsx.
+- Pending: remove the leftover line "Placeholder copy. Final headline and intro will be written with the team." under the hero headline (source file not found yet). Tune tagline spacing and size.
+- Risk: horse model permission is verbal only. The file came from a GetLayers AI (Textura Agency) template asset. On 2026-10-14 the owner said the relative who owns that site gave the OK. Keep a written OK. If withdrawn, swap the model file (only the file, HORSE_YAW and HORSE_SIZE change).
+- Owner is a beginner and writes Hinglish. Give one step at a time, ask for the output to be pasted back, and give full files for big edits.
