@@ -115,3 +115,9 @@ Tune visual style from owner screenshots of the reference; Sculpture separation 
 - Pending: remove the leftover line "Placeholder copy. Final headline and intro will be written with the team." under the hero headline (source file not found yet). Tune tagline spacing and size.
 - Risk: horse model permission is verbal only. The file came from a GetLayers AI (Textura Agency) template asset. On 2026-10-14 the owner said the relative who owns that site gave the OK. Keep a written OK. If withdrawn, swap the model file (only the file, HORSE_YAW and HORSE_SIZE change).
 - Owner is a beginner and writes Hinglish. Give one step at a time, ask for the output to be pasted back, and give full files for big edits.
+
+## UPDATE 2026-10-14 (later, read this too)
+- Hero.tsx tagline fix: scrolling back to the top no longer calls play(), so the big "Tvarise" name does not vanish and re-fade. The tagline now types in from the end (stagger from "end") in the onLeaveBack handler. Owner has not yet confirmed this in the browser.
+- The unused backspace() function is still in Hero.tsx and may cause a lint warning.
+- The hero line "Placeholder copy. Final headline and intro..." was not found in src or content, it may already be gone. The only remaining "Placeholder copy" tag is in About.tsx (shown when content.placeholder is true).
+- Next task: redesign Services ("What we do") from bento cards into large rows (big number + big title, hover expands summary and includes, line draws on scroll, stacked rows on mobile). Not started yet. Do not paste it before checking .bento and .card CSS in globals.css.

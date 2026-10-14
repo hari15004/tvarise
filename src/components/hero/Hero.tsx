@@ -35,7 +35,7 @@ export function Hero({ title, sub, ctaLabel, ctaHref, bigName, tags }: Props) {
         .timeline({ paused: true })
         .fromTo(q(".hero__char"), { opacity: 0 }, { opacity: 1, duration: 0.02, stagger: 0.03, ease: "none" }, 0.5);
 
-      // Entrance: headline words slide up, items fade up, tagline types in.
+      // Entrance: headline words slide up and items fade up.
       // It runs after the intro, and again every time the visitor scrolls back to the top.
       let entrance: gsap.core.Timeline | null = null;
       const play = () => {
@@ -49,9 +49,21 @@ export function Hero({ title, sub, ctaLabel, ctaHref, bigName, tags }: Props) {
             { y: 0, opacity: 1, duration: 0.9, stagger: STAGGER.items },
             0.45,
           );
+      };
+      // First load: the tagline types in, letter by letter.
+      const typeIn = () => {
         typing.timeScale(1).play(0);
       };
-      offIntro = onIntroDone(() => self.add(play));
+      // Coming back from below: the full tagline shows, then backspaces away.
+      const backspace = () => {
+        typing.progress(1).timeScale(1.5).reverse();
+      };
+      offIntro = onIntroDone(() =>
+        self.add(() => {
+          play();
+          typeIn();
+        }),
+      );
 
       // Leaving the top: the tagline erases itself. Coming back to the top: everything plays again.
       ScrollTrigger.create({
@@ -60,7 +72,10 @@ export function Hero({ title, sub, ctaLabel, ctaHref, bigName, tags }: Props) {
         onEnter: () => {
           typing.timeScale(3).reverse();
         },
-        onLeaveBack: () => self.add(play),
+        onLeaveBack: () =>
+          self.add(() => {
+            gsap.fromTo(q(".hero__char"), { opacity: 0 }, { opacity: 1, duration: 0.02, stagger: { each: 0.03, from: "end" }, ease: "none", overwrite: "auto", onComplete: () => { typing.progress(1).pause(); } });
+          }),
       });
 
       // Scroll: the hero is a tall section with a sticky screen inside it.
