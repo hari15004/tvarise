@@ -129,3 +129,9 @@ Tune visual style from owner screenshots of the reference; Sculpture separation 
 - Process.tsx still receives a placeholder prop that is now unused, and page.tsx still passes it. Clean up later if lint complains.
 - Placeholder TEXT inside content JSON (e.g. "Placeholder description", "Placeholder Project 01") still shows on screen until the team gives real copy. Do not invent copy.
 - Build passes (npm run build, 7 routes).
+
+## UPDATE 2026-10-15 (phone view polish, in progress)
+- Phone hero horse moved down and made smaller in src/three/sculpture.ts layout(): baseY 1.5 -> 0.4 and baseScale 0.5 -> 0.4 (phone only, desktop values unchanged). Reason: by calculation at 390x844 the horse sat behind the tagline. This is a first guess made without a screenshot; the owner will check on a real phone after the Vercel deploy and report.
+- Frame-loop phone targets (sc ce target baseScale*0.75, py target 0.5) were NOT changed yet. Check the final CTA zoom-in on phone next.
+- Still to check on phone: Services stack, other sections, nav, footer, horizontal overflow, lite tier performance.
+- Build passes (npm run build).

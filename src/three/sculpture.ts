@@ -347,8 +347,8 @@ export function createSculpture({ canvas, tier, onSlow, onContextLost }: Options
     wide = camera.aspect > 1.1;
     const halfW = 6 * Math.tan((25 * Math.PI) / 180) * camera.aspect;
     baseX = wide ? Math.min(2.5, halfW * 0.5) : 0;
-    baseY = wide ? 0 : 1.5;
-    baseScale = wide ? Math.min(0.8, camera.aspect * 0.45) : 0.5;
+    baseY = wide ? 0 : 0.4;
+    baseScale = wide ? Math.min(0.8, camera.aspect * 0.45) : 0.4;
   };
   layout();
   window.addEventListener("resize", layout);
