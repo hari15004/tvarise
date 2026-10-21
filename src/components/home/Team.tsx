@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { TeamMember } from "@/lib/types";
 import { SectionHead } from "./SectionHead";
 
@@ -23,7 +24,11 @@ export function Team({ index, members }: { index: string; members: TeamMember[] 
                 )}
               </div>
               <div className="team-card__body" data-reveal>
-                <h3 className="team-card__name">{member.name}</h3>
+                <h3 className="team-card__name">
+                  <Link href={`/team/${member.slug}`} className="team-card__link">
+                    {member.name}
+                  </Link>
+                </h3>
                 <p className="team-card__role">{member.role}</p>
               </div>
             </li>

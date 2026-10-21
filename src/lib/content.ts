@@ -55,3 +55,5 @@ export const getBuildingItems = () => readCollection<BuildingItem>("building");
 export function getHome(): HomeContent {
   return readJson<HomeContent>(path.join(CONTENT_DIR, "home.json"));
 }
+
+export const getMember = (slug: string) => getTeam().find((m) => m.slug === slug) ?? null;

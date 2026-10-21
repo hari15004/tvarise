@@ -3,10 +3,20 @@
   "slug": "team-member-4",
   "name": "Team Member 4",
   "role": "3D Designer + 3D Animation",
-  "shortLine": "Placeholder line.",
-  "bio": "Placeholder bio.",
+  "shortLine": "3D visuals and animation that make brands stand out.",
+  "bio": "Placeholder bio. Yahan apne baare me 2-3 line likho: kitne saal ka experience, kin projects par kaam kiya, aur kis cheez me tum sabse achhe ho.",
   "portrait": null,
-  "links": [],
+  "links": [
+    { "label": "ArtStation", "href": "https://artstation.com" },
+    { "label": "LinkedIn", "href": "https://linkedin.com" }
+  ],
+  "skills": ["3D Modeling", "3D Animation", "Product Visuals", "Motion Graphics"],
+  "email": "hello@example.com",
+  "available": true,
+  "work": [
+    { "title": "Sample 3D project 1", "summary": "Ek line me batao kya model ya animation banaya." },
+    { "title": "Sample 3D project 2", "summary": "Doosra project yahan aayega." }
+  ],
   "pieceId": "piece-3d",
   "order": 4,
   "published": true

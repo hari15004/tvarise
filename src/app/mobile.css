@@ -179,3 +179,14 @@ button {
     padding-bottom: calc(var(--space-5) + 6rem);
   }
 }
+
+/* Whole team card is tappable (the name link stretches over the card) */
+.team-card__link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+}
+.team-card__link:hover {
+  color: var(--accent);
+}

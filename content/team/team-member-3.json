@@ -3,10 +3,20 @@
   "slug": "team-member-3",
   "name": "Team Member 3",
   "role": "Web Designer",
-  "shortLine": "Placeholder line.",
-  "bio": "Placeholder bio.",
+  "shortLine": "Fast, clean websites that turn visitors into clients.",
+  "bio": "Placeholder bio. Yahan apne baare me 2-3 line likho: kitne saal ka experience, kin websites par kaam kiya, aur kis cheez me tum sabse achhe ho.",
   "portrait": null,
-  "links": [],
+  "links": [
+    { "label": "GitHub", "href": "https://github.com" },
+    { "label": "LinkedIn", "href": "https://linkedin.com" }
+  ],
+  "skills": ["Website Design", "Responsive Layouts", "Landing Pages", "Frontend Development"],
+  "email": "hello@example.com",
+  "available": true,
+  "work": [
+    { "title": "Sample website 1", "summary": "Ek line me batao kis business ki site thi aur kya banaya." },
+    { "title": "Sample website 2", "summary": "Doosra project yahan aayega." }
+  ],
   "pieceId": "piece-web",
   "order": 3,
   "published": true

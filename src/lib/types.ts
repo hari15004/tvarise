@@ -34,6 +34,10 @@ export type TeamMember = CollectionItem & {
   portrait: string | null;
   links: NavItem[];
   pieceId: string;
+  skills?: string[];
+  email?: string;
+  available?: boolean;
+  work?: { title: string; summary: string; link?: string; image?: string }[];
 };
 
 export type Project = CollectionItem & {
