@@ -8,18 +8,20 @@
     "start": "next start"
   },
   "dependencies": {
+    "@supabase/ssr": "^0.12.7",
+    "@supabase/supabase-js": "^2.118.0",
+    "gsap": "latest",
+    "lenis": "latest",
     "next": "16.4.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
-    "gsap": "latest",
-    "lenis": "latest",
     "three": "latest"
   },
   "devDependencies": {
-    "typescript": "^5.9.0",
     "@types/node": "^22.0.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
-    "@types/three": "latest"
+    "@types/three": "latest",
+    "typescript": "^5.9.0"
   }
 }

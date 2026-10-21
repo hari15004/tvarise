@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getMember, getTeam } from "@/lib/content";
+import { getTeam } from "@/lib/content";
+import { getMemberLive } from "@/lib/members";
 import "./member.css";
 
 
@@ -13,13 +14,13 @@ type Props = { params: Promise<{ slug: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const m = getMember(slug);
+  const m = await getMemberLive(slug);
   return { title: m ? m.name : "Team" };
 }
 
 export default async function Page({ params }: Props) {
   const { slug } = await params;
-  const m = getMember(slug);
+  const m = await getMemberLive(slug);
   if (!m) notFound();
 
   const contact = m.email ? `mailto:${m.email}` : "/contact";
