@@ -346,9 +346,9 @@ export function createSculpture({ canvas, tier, onSlow, onContextLost }: Options
     uniforms.uResolution.value.copy(size);
     wide = camera.aspect > 1.1;
     const halfW = 6 * Math.tan((25 * Math.PI) / 180) * camera.aspect;
-    baseX = wide ? Math.min(2.5, halfW * 0.5) : 0;
-    baseY = wide ? 0 : 0.4;
-    baseScale = wide ? Math.min(0.8, camera.aspect * 0.45) : 0.4;
+    baseX = wide ? Math.min(2.5, halfW * 0.5) : 0.6;
+    baseY = wide ? 0 : 0.6;
+    baseScale = wide ? Math.min(0.8, camera.aspect * 0.45) : 0.3;
   };
   layout();
   window.addEventListener("resize", layout);
@@ -415,7 +415,7 @@ export function createSculpture({ canvas, tier, onSlow, onContextLost }: Options
     // Stage dims behind the content once the hero is done, returns for the final CTA.
     const p = stageInput.heroProgress;
     const ce = smooth(0, 1, stageInput.ctaProgress);
-    canvas.style.opacity = String(lerp(1 - 0.65 * smooth(0.7, 1, p), 0.7, ce));
+    canvas.style.opacity = String(lerp(1 - 0.65 * smooth(0.7, 1, p), wide ? 0.7 : 0.95, ce));
 
     // Horse: starts close up, zooms out and turns 90 degrees while the hero
     // scrolls, then lifts away. Scrolling back up reverses it. At the final CTA
@@ -439,9 +439,9 @@ export function createSculpture({ canvas, tier, onSlow, onContextLost }: Options
     const ceE = smooth(0.05, 1, ce); // zoom-in progress at the CTA
 
     let sc = lerp(baseScale * 1.5, baseScale * 0.85, z);
-    sc = lerp(sc, wide ? baseScale * 0.9 : baseScale * 0.75, ce);
+    sc = lerp(sc, wide ? baseScale * 0.9 : baseScale * 1.35, ce);
     const px = lerp(baseX, 0, ce);
-    const py = lerp(baseY, wide ? 0 : 0.5, ce) + rise;
+    const py = lerp(baseY, wide ? 0 : 1.0, ce) + (wide ? rise : rise * (1 - ce));
     const pz = lerp(0, lerp(-2.5, 0.8, ceE), cm); // starts behind the glow, ends in front
     const zoomMul = lerp(1, lerp(0.45, 1.1, ceE), cm);
 
@@ -456,7 +456,7 @@ export function createSculpture({ canvas, tier, onSlow, onContextLost }: Options
 
     rig.position.set(px, py, pz);
     rig.scale.setScalar(sc * zoomMul * (0.94 + 0.06 * state.intro));
-    rig.rotation.y = HORSE_YAW + z * (Math.PI / 2) * (1 - ce) + cur.x * 0.15;
+    rig.rotation.y = HORSE_YAW + z * (Math.PI / 2) * (1 - ce) + cur.x * 0.15 + (wide ? 0 : Math.sin(t * 0.6) * 0.3 * ce);
     rig.rotation.x = -cur.y * 0.08;
 
     renderer.render(scene, camera);

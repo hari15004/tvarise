@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Inter, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import "./home.css";
+import "./mobile.css";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { Intro } from "@/components/Intro";
@@ -34,6 +35,9 @@ export function generateMetadata(): Metadata {
 export const viewport: Viewport = {
   themeColor: "#0a0a0b",
   colorScheme: "dark",
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
 };
 
 // Runs before first paint. Decides if animations start hidden ("motion on") and
