@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import { getTeam } from "@/lib/content";
 import { getMemberLive } from "@/lib/members";
@@ -14,10 +15,45 @@ export function generateStaticParams() {
 
 type Props = { params: Promise<{ slug: string }> };
 
+type EditInitial = {
+  name: string;
+  role_title: string;
+  bio: string;
+  skills: string[];
+  email: string;
+  available: boolean;
+};
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const m = await getMemberLive(slug);
   return { title: m ? m.name : "Team" };
+}
+
+async function EditGate({ slug, initial }: { slug: string; initial: EditInitial }) {
+  const supabase = await createClient();
+  const { data: auth } = await supabase.auth.getUser();
+  if (!auth.user) return null;
+
+  const { data: own } = await supabase
+    .from("members")
+    .select("slug")
+    .eq("slug", slug)
+    .eq("user_id", auth.user.id)
+    .maybeSingle();
+
+  let canEdit = !!own;
+  if (!canEdit) {
+    const { data: prof } = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", auth.user.id)
+      .maybeSingle();
+    canEdit = prof?.role === "admin";
+  }
+
+  if (!canEdit) return null;
+  return <EditPanel slug={slug} initial={initial} />;
 }
 
 export default async function Page({ params }: Props) {
@@ -25,21 +61,12 @@ export default async function Page({ params }: Props) {
   const m = await getMemberLive(slug);
   if (!m) notFound();
 
-  const supabase = await createClient();
-  const { data: auth } = await supabase.auth.getUser();
-  let canEdit = false;
-  if (auth.user) {
-    const { data: row } = await supabase.from("members").select("slug").eq("slug", slug).maybeSingle();
-    canEdit = !!row && (await supabase.from("members").select("user_id").eq("slug", slug).eq("user_id", auth.user.id).maybeSingle()).data !== null
-      || (await supabase.from("profiles").select("role").eq("id", auth.user.id).maybeSingle()).data?.role === "admin";
-  }
-
   const contact = m.email ? `mailto:${m.email}` : "/contact";
 
   return (
     <section className="member">
-      {canEdit ? (
-        <EditPanel
+      <Suspense fallback={null}>
+        <EditGate
           slug={slug}
           initial={{
             name: m.name,
@@ -50,7 +77,7 @@ export default async function Page({ params }: Props) {
             available: !!m.available,
           }}
         />
-      ) : null}
+      </Suspense>
       <div className="container">
         <Link href="/#team" className="member__back">
           &larr; Team

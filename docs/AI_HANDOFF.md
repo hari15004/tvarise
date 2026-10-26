@@ -33,10 +33,10 @@ Created so far: `/content`, `/src/app`, `/src/components`, `/src/lib`, `/docs`. 
 None yet. Planned: 3D stage, Sculpture controller, tier detection, motion layer, content loaders, section components, case-study blocks.
 
 ## DATABASE STRUCTURE
-None. No database at launch. Content lives in `/content` files validated by schema.
+Supabase tables: `members` (per-member page content, owner in `user_id`) and `profiles` (`role`, admin or not). `/content` JSON stays as structure and fallback. Content lives in `/content` files validated by schema.
 
 ## API STRUCTURE
-Planned: one contact-form server route. Nothing else.
+Server action `saveMember` in `src/app/team/[slug]/actions.ts`. The contact-form route is still planned.. Nothing else.
 
 ## DESIGN SYSTEM
 Not yet defined. Direction: premium dark, one accent color **[TBD]**, bold tight typography, glass-style cards, restrained glow. Tokens (easing, durations, spacing, type scale) to be defined in the Foundation phase and recorded in `DECISIONS.md`.
@@ -135,3 +135,5 @@ Tune visual style from owner screenshots of the reference; Sculpture separation 
 - Frame-loop phone targets (sc ce target baseScale*0.75, py target 0.5) were NOT changed yet. Check the final CTA zoom-in on phone next.
 - Still to check on phone: Services stack, other sections, nav, footer, horizontal overflow, lite tier performance.
 - Build passes (npm run build).
+## UPDATE 2026-10-26
+- /team is now the list page and /team/[slug] has the Suspense EditGate. Next.js is 16.4.3. tsbuildinfo and .vercel are untracked and ignored. The Google Form script was moved out of public/. Next planned: single-admin /admin panel.

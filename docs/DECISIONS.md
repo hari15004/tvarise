@@ -76,7 +76,7 @@ Format: DATE / DECISION / WHY / ALTERNATIVES CONSIDERED / CONSEQUENCES
 - **Alternatives:** Fixed five pieces with one shown as unassigned.
 - **Consequences:** The final Sculpture design must work with a varying piece count, or be designed so a new piece can be added later. **Flagged for owner confirmation with the 3D designer.**
 
-## D-011 No database, login, admin panel or payments at launch
+## D-011 No database, login, admin panel or payments at launch (SUPERSEDED by D-021)
 - **Date:** 2026-10-12
 - **Decision:** Static/content-driven site with one contact-form server route.
 - **Why:** Smaller attack surface, lower cost, simpler maintenance.
@@ -145,3 +145,9 @@ Format: DATE / DECISION / WHY / ALTERNATIVES CONSIDERED / CONSEQUENCES
 - **Why:** Fulfils the approved "pieces reunite at the final CTA" idea with a small change.
 - **Alternatives:** Separate timeline per section (planned later for Services).
 - **Consequences:** Sculpture behavior for the Services section (pieces separating) is still pending.
+## D-021 Supabase login and member-page editing (admin role)
+- **Date:** 2026-10-26
+- **Decision:** Supabase Auth (email + password) and a `members` table are used. A member can edit their own page. A user whose `profiles.role` is `admin` can edit any member page. JSON in `/content` stays as structure and fallback.
+- **Why:** The team wants to edit page text without changing code.
+- **Alternatives:** Edit JSON in Git only.
+- **Consequences:** Supersedes D-011 for login and database. Site-wide editing by one admin is planned next, not built yet. Env var names only: NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY.

@@ -1,6 +1,6 @@
 # SECURITY.md
 
-Security checklist and policy. Not yet implemented. Attack surface is deliberately small: no accounts, no admin panel, no database, no file uploads at launch.
+Security checklist and policy. Not fully implemented yet. Supabase login and member-page editing exist (see DECISIONS.md D-021). No payments and no file uploads yet. Not yet implemented. Attack surface is deliberately small: no accounts, no admin panel, no database, no file uploads at launch.
 
 ## Rules (always)
 - NEVER put private API keys, passwords, tokens or credentials in frontend code.
@@ -23,7 +23,7 @@ Security checklist and policy. Not yet implemented. Attack surface is deliberate
 | Spam / abuse | Honeypot + CAPTCHA alternative (e.g. Cloudflare Turnstile); rate limiting on the contact route | [ ] |
 | CORS | Contact route accepts only same-origin requests | [ ] |
 | Email | Sender/recipient fixed server-side; user input never used as a header value unescaped (prevent header injection) | [ ] |
-| Authentication / sessions / cookies | Not applicable at launch (no accounts); if added later, requires a new decision and review | [ ] |
+| | Authentication / sessions / cookies | Supabase Auth with cookies (src/proxy.ts refreshes the session). Edit rights are checked on the server in saveMember and must also be enforced by Supabase RLS (RLS not yet verified) | [ ] | | Not applicable at launch (no accounts); if added later, requires a new decision and review | [ ] |
 | File uploads | None at launch | [ ] |
 | Dependencies | Lockfile committed; `audit` run on each release; minimal dependencies | [ ] |
 | Supply chain | Pin versions; review new packages before adding; prefer well-maintained libraries; check licenses (including GSAP) | [ ] |
