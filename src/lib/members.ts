@@ -3,8 +3,8 @@ import { cacheLife, cacheTag } from "next/cache";
 import { getMember } from "./content";
 import type { TeamMember } from "./types";
 
-// Public read: cookies nahi use hoti, isliye cache ho sakta hai.
-// Save ke baad hum tag "member-<slug>" se cache refresh karenge.
+// Public read, cache hota hai. Save ke baad tag "member-<slug>" se refresh hota hai.
+// JSON sirf structure ke liye (slug, order, etc). Content Supabase se aata hai.
 export async function getMemberLive(slug: string): Promise<TeamMember | null> {
   "use cache";
   cacheLife("minutes");
@@ -28,11 +28,14 @@ export async function getMemberLive(slug: string): Promise<TeamMember | null> {
   return {
     ...base,
     name: data.name || base.name,
-    role: data.role_title || base.role,
-    bio: data.bio || base.bio,
-    skills: data.skills?.length ? data.skills : base.skills,
-    email: data.email || base.email,
+    role: data.role_title,
+    shortLine: data.short_line,
+    bio: data.bio,
+    portrait: data.portrait || null,
+    links: Array.isArray(data.links) ? data.links : [],
+    skills: data.skills ?? [],
+    email: data.email,
     available: data.available,
-    work: data.work?.length ? data.work : base.work,
+    work: Array.isArray(data.work) ? data.work : [],
   };
 }

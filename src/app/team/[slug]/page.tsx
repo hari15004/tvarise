@@ -3,6 +3,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getTeam } from "@/lib/content";
 import { getMemberLive } from "@/lib/members";
+import { createClient } from "@/lib/supabase/server";
+import EditPanel from "./EditPanel";
 import "./member.css";
 
 
@@ -23,10 +25,32 @@ export default async function Page({ params }: Props) {
   const m = await getMemberLive(slug);
   if (!m) notFound();
 
+  const supabase = await createClient();
+  const { data: auth } = await supabase.auth.getUser();
+  let canEdit = false;
+  if (auth.user) {
+    const { data: row } = await supabase.from("members").select("slug").eq("slug", slug).maybeSingle();
+    canEdit = !!row && (await supabase.from("members").select("user_id").eq("slug", slug).eq("user_id", auth.user.id).maybeSingle()).data !== null
+      || (await supabase.from("profiles").select("role").eq("id", auth.user.id).maybeSingle()).data?.role === "admin";
+  }
+
   const contact = m.email ? `mailto:${m.email}` : "/contact";
 
   return (
     <section className="member">
+      {canEdit ? (
+        <EditPanel
+          slug={slug}
+          initial={{
+            name: m.name,
+            role_title: m.role,
+            bio: m.bio,
+            skills: m.skills ?? [],
+            email: m.email ?? "",
+            available: !!m.available,
+          }}
+        />
+      ) : null}
       <div className="container">
         <Link href="/#team" className="member__back">
           &larr; Team

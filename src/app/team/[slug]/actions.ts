@@ -1,0 +1,75 @@
+"use server";
+
+import { revalidateTag } from "next/cache";
+import { createClient } from "@/lib/supabase/server";
+
+type Link = { label: string; href: string };
+type Work = { title: string; summary: string; link?: string; image?: string };
+
+export async function saveMember(
+  slug: string,
+  fields: {
+    name: string;
+    role_title: string;
+    short_line?: string;
+    bio: string;
+    skills: string[];
+    email: string;
+    available: boolean;
+    links?: Link[];
+    work?: Work[];
+  }
+) {
+  const supabase = await createClient();
+  const { data: auth } = await supabase.auth.getUser();
+  if (!auth.user) return { ok: false, error: "Login karo pehle." };
+
+  const safeUrl = (u: string) => {
+    const t = (u || "").trim().slice(0, 300);
+    return /^https?:\/\//i.test(t) ? t : "";
+  };
+
+  const clean: Record<string, unknown> = {
+    name: (fields.name ?? "").trim().slice(0, 80),
+    role_title: (fields.role_title ?? "").trim().slice(0, 120),
+    bio: (fields.bio ?? "").trim().slice(0, 2000),
+    skills: (fields.skills ?? []).map((s) => s.trim().slice(0, 40)).filter(Boolean).slice(0, 20),
+    email: (fields.email ?? "").trim().slice(0, 120),
+    available: !!fields.available,
+  };
+
+  if (fields.short_line !== undefined) {
+    clean.short_line = fields.short_line.trim().slice(0, 160);
+  }
+  if (fields.links !== undefined) {
+    clean.links = fields.links
+      .map((l) => ({ label: l.label.trim().slice(0, 40), href: safeUrl(l.href) }))
+      .filter((l) => l.label && l.href)
+      .slice(0, 10);
+  }
+  if (fields.work !== undefined) {
+    clean.work = fields.work
+      .map((w) => ({
+        title: w.title.trim().slice(0, 100),
+        summary: w.summary.trim().slice(0, 500),
+        link: safeUrl(w.link || ""),
+        image: safeUrl(w.image || ""),
+      }))
+      .filter((w) => w.title)
+      .slice(0, 20);
+  }
+
+  if (!clean.name) return { ok: false, error: "Naam khali nahi ho sakta." };
+
+  const { data, error } = await supabase
+    .from("members")
+    .update(clean)
+    .eq("slug", slug)
+    .select("slug");
+
+  if (error) return { ok: false, error: "Save nahi hua." };
+  if (!data || data.length === 0) return { ok: false, error: "Tumhe ye page edit karne ki permission nahi hai." };
+
+  revalidateTag(`member-${slug}`, "max");
+  return { ok: true, error: "" };
+}
