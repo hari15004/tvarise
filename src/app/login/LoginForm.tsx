@@ -21,10 +21,13 @@ export default function LoginForm() {
       return;
     }
     const requestedPath = new URLSearchParams(window.location.search).get("next");
-    const destination =
-      requestedPath?.startsWith("/") && !requestedPath.startsWith("//")
-        ? requestedPath
-        : "/";
+    let destination = "/";
+    if (requestedPath?.startsWith("/") && !requestedPath.startsWith("//")) {
+      const url = new URL(requestedPath, window.location.origin);
+      if (url.origin === window.location.origin) {
+        destination = `${url.pathname}${url.search}${url.hash}`;
+      }
+    }
     window.location.href = destination;
   }
 
