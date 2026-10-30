@@ -1,19 +1,17 @@
 import type { Metadata } from "next";
-import { PageStub } from "@/components/PageStub";
-import { getSite } from "@/lib/content";
+import { Work } from "@/components/home/Work";
+import { getProjects } from "@/lib/content";
 
-export async function generateMetadata(): Promise<Metadata> {
-  const site = await getSite();
-  return { title: site.pages?.work.title ?? "Work" };
-}
+export const metadata: Metadata = { title: "Work" };
 
 export default async function Page() {
-  const page = (await getSite()).pages?.work;
+  const projects = (await getProjects()).filter((project) => !project.placeholder && !project.inProgress);
   return (
-    <PageStub
-      label={page?.label ?? "Coming in a later step"}
-      title={page?.title ?? "Work"}
-      note={page?.note ?? "Selected work and the project index will live here."}
+    <Work
+      index="001"
+      items={projects}
+      heading={{ label: "All work", title: "Selected projects" }}
+      showMore={false}
     />
   );
 }

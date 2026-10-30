@@ -17,6 +17,21 @@ html[data-motion="on"] .statement__w {
 .section--quiet {
   border-top: 1px solid var(--line);
 }
+.page-intro {
+  padding-bottom: 0;
+}
+.page-cta {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-3);
+}
+.page-cta h2 {
+  font-size: var(--step-2);
+}
+.page-cta p {
+  max-width: 55ch;
+  color: var(--muted);
+}
 .section__more {
   display: flex;
   justify-content: center;
@@ -34,7 +49,7 @@ html[data-motion="on"] .statement__w {
   gap: 0.9rem;
   color: var(--muted);
   font-size: var(--step--1);
-  letter-spacing: 0.14em;
+  letter-spacing: 0.11em;
   text-transform: uppercase;
 }
 .sec-label__n {
@@ -44,7 +59,8 @@ html[data-motion="on"] .statement__w {
 .sec-title {
   font-size: var(--step-3);
   font-weight: 700;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
 }
 .sec-text {
   max-width: 50ch;
@@ -150,10 +166,11 @@ html[data-motion="on"] .statement__w {
 }
 .svc__title {
   margin: auto 0 0;
-  font-size: clamp(2.4rem, 8.5vw, 6.5rem);
-  font-weight: 500;
-  line-height: 0.98;
-  letter-spacing: -0.035em;
+  font-size: clamp(2rem, 5.8vw, 4.5rem);
+  font-weight: 600;
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
 }
 .svc__text {
   margin: 0;
@@ -177,6 +194,26 @@ html[data-motion="on"] .statement__w {
 .svc .tag {
   align-self: flex-start;
 }
+.svc__actions {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--space-4);
+}
+.svc__add-service {
+  display: none;
+  min-height: 46px;
+  padding: 0.7rem 1rem;
+  border: 1px dashed var(--line);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--accent);
+  font: inherit;
+  cursor: pointer;
+}
+body[data-site-edit-mode="true"] .svc__add-service {
+  display: inline-flex;
+  align-items: center;
+}
 @media (max-width: 640px) {
   .svc__card {
     top: calc(4.5rem + var(--i) * 0.8rem);
@@ -185,7 +222,8 @@ html[data-motion="on"] .statement__w {
 /* ---- Selected work ---- */
 .work__grid {
   display: grid;
-  gap: var(--space-5);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+  gap: clamp(1.25rem, 3vw, 2.5rem);
 }
 .work-card__link {
   display: grid;
@@ -244,14 +282,29 @@ html[data-motion="on"] .statement__w {
 }
 @media (min-width: 860px) {
   .work__grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
-  .work-card:nth-child(3n) {
-    grid-column: 1 / -1;
-  }
-  .work-card:nth-child(3n) .work-card__media {
-    aspect-ratio: 21 / 9;
-  }
+}
+.work__actions {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: var(--space-6);
+}
+.work__add-project {
+  display: none;
+  min-height: 48px;
+  padding: 0.75rem 1rem;
+  border: 1px dashed var(--line);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--accent);
+  font: inherit;
+  cursor: pointer;
+}
+body[data-site-edit-mode="true"] .work__add-project {
+  display: inline-flex;
+  align-items: center;
 }
 
 /* ---- Currently building ---- */
@@ -265,6 +318,48 @@ html[data-motion="on"] .statement__w {
   padding: var(--space-4);
   border: 1px solid var(--line);
   border-radius: var(--radius-m);
+}
+.building__item--empty {
+  border-style: dashed;
+}
+.building__item--empty .building__dot {
+  animation: none;
+  background: var(--muted);
+}
+.building--projects {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+}
+.building__image {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  margin-bottom: var(--space-2);
+  border-radius: var(--radius-s);
+  object-fit: cover;
+}
+.building__year {
+  color: var(--muted);
+  font-size: var(--step--1);
+}
+.building__complete-edit,
+.building__add-project {
+  display: none;
+  width: fit-content;
+  padding: 0.65rem 0.85rem;
+  border: 1px dashed var(--line);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--accent);
+  font: inherit;
+  font-size: var(--step--1);
+  cursor: pointer;
+}
+body[data-site-edit-mode="true"] .building__complete-edit,
+body[data-site-edit-mode="true"] .building__add-project {
+  display: inline-flex;
+  align-items: center;
+}
+.building__add-project {
+  margin-top: var(--space-4);
 }
 .building__top {
   display: flex;
@@ -362,7 +457,7 @@ html[data-motion="on"] .statement__w {
 .process__title {
   font-size: var(--step-2);
   font-weight: 700;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.025em;
 }
 .process__text {
   max-width: 48ch;
@@ -385,6 +480,26 @@ html[data-motion="on"] .process__step:not(.is-active) .process__title {
   display: grid;
   gap: var(--space-4);
   grid-template-columns: repeat(2, 1fr);
+}
+.team__actions {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--space-4);
+}
+.team__add-person {
+  display: none;
+  min-height: 46px;
+  padding: 0.7rem 1rem;
+  border: 1px dashed var(--line);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--accent);
+  font: inherit;
+  cursor: pointer;
+}
+body[data-site-edit-mode="true"] .team__add-person {
+  display: inline-flex;
+  align-items: center;
 }
 @media (min-width: 960px) {
   .team {
@@ -467,6 +582,19 @@ html[data-motion="on"] .process__step:not(.is-active) .process__title {
   gap: var(--space-3);
   margin-bottom: var(--space-5);
 }
+.why__image {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  margin-bottom: var(--space-3);
+  border-radius: var(--radius-s);
+  object-fit: cover;
+}
+.why__link {
+  display: inline-block;
+  margin-top: var(--space-2);
+  color: var(--accent);
+  font-size: var(--step--1);
+}
 @media (min-width: 860px) {
   .why {
     grid-template-columns: repeat(3, 1fr);
@@ -497,7 +625,9 @@ html[data-motion="on"] .process__step:not(.is-active) .process__title {
   max-width: 14ch;
   font-size: var(--step-4);
   font-weight: 700;
-  letter-spacing: -0.04em;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  text-wrap: balance;
 }
 .cta__text {
   max-width: 44ch;
@@ -509,10 +639,10 @@ html[data-motion="on"] .process__step:not(.is-active) .process__title {
   z-index: 1;
   margin: 0 0 -0.12em var(--gutter);
   font-family: var(--font-head);
-  font-size: clamp(5rem, 24vw, 22rem);
+  font-size: clamp(4.5rem, 18vw, 14rem);
   font-weight: 700;
   line-height: 0.85;
-  letter-spacing: -0.06em;
+  letter-spacing: -0.045em;
   white-space: nowrap;
   color: transparent;
   -webkit-text-stroke: 1px rgba(255, 255, 255, 0.16);

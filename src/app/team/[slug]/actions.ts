@@ -18,6 +18,8 @@ export async function saveMember(
     available: boolean;
     links?: Link[];
     work?: Work[];
+    portfolioUrl?: string;
+    portrait: string | null;
   }
 ) {
   const supabase = await createClient();
@@ -36,16 +38,21 @@ export async function saveMember(
     skills: (fields.skills ?? []).map((s) => s.trim().slice(0, 40)).filter(Boolean).slice(0, 20),
     email: (fields.email ?? "").trim().slice(0, 120),
     available: !!fields.available,
+    portrait: safeUrl(fields.portrait ?? ""),
   };
 
   if (fields.short_line !== undefined) {
     clean.short_line = fields.short_line.trim().slice(0, 160);
   }
   if (fields.links !== undefined) {
-    clean.links = fields.links
+    const links = fields.links
       .map((l) => ({ label: l.label.trim().slice(0, 40), href: safeUrl(l.href) }))
       .filter((l) => l.label && l.href)
       .slice(0, 10);
+    const portfolioUrl = safeUrl(fields.portfolioUrl ?? "");
+    clean.links = portfolioUrl
+      ? [...links.filter((link) => link.label.toLowerCase() !== "portfolio"), { label: "Portfolio", href: portfolioUrl }].slice(0, 10)
+      : links.filter((link) => link.label.toLowerCase() !== "portfolio");
   }
   if (fields.work !== undefined) {
     clean.work = fields.work
@@ -71,5 +78,6 @@ export async function saveMember(
   if (!data || data.length === 0) return { ok: false, error: "Tumhe ye page edit karne ki permission nahi hai." };
 
   revalidateTag(`member-${slug}`, "max");
+  revalidateTag("cms-team", "max");
   return { ok: true, error: "" };
 }

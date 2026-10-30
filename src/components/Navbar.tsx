@@ -5,10 +5,11 @@ import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import type { NavItem } from "@/lib/types";
 
-type Props = { name: string; items: NavItem[]; cta: NavItem };
+type Props = { name: string; logo?: string; items: NavItem[]; cta: NavItem };
 
-export function Navbar({ name, items, cta }: Props) {
+export function Navbar({ name, logo, items, cta }: Props) {
   const [open, setOpen] = useState(false);
+  const [hidden, setHidden] = useState(false);
   const pathname = usePathname();
   const toggleRef = useRef<HTMLButtonElement>(null);
 
@@ -16,6 +17,31 @@ export function Navbar({ name, items, cta }: Props) {
   useEffect(() => {
     setOpen(false);
   }, [pathname]);
+
+  useEffect(() => {
+    let previousY = window.scrollY;
+    let frame = 0;
+    const onScroll = () => {
+      if (frame) return;
+      frame = window.requestAnimationFrame(() => {
+        frame = 0;
+        const currentY = window.scrollY;
+        if (open || currentY <= 80 || document.body.dataset.siteEditMode === "true") {
+          setHidden(false);
+        } else if (currentY > previousY + 4) {
+          setHidden(true);
+        } else if (currentY < previousY - 4) {
+          setHidden(false);
+        }
+        previousY = currentY;
+      });
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      if (frame) window.cancelAnimationFrame(frame);
+    };
+  }, [open]);
 
   // While the menu is open: lock page scroll and close on Escape.
   useEffect(() => {
@@ -35,10 +61,16 @@ export function Navbar({ name, items, cta }: Props) {
   }, [open]);
 
   return (
-    <header className="nav">
+    <header className={`nav${hidden && !open ? " nav--hidden" : ""}`} inert={hidden && !open}>
       <div className="container nav__inner">
         <Link href="/" className="brand" aria-label={`${name}, home`}>
-          {name}
+          {logo ? (
+            <img
+              src={logo}
+              alt={name}
+              style={{ width: "auto", height: "2rem", maxWidth: "9rem", objectFit: "contain" }}
+            />
+          ) : name}
         </Link>
 
         <nav aria-label="Primary" className="nav__links">

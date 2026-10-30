@@ -1,5 +1,15 @@
 {
   "placeholder": true,
+  "sectionOrder": ["services", "work", "process", "team", "building", "about", "cta"],
+  "sectionVisibility": {
+    "services": true,
+    "work": true,
+    "building": true,
+    "process": true,
+    "team": true,
+    "about": true,
+    "cta": true
+  },
   "sections": {
     "services": { "label": "Services", "title": "What we do" },
     "work": { "label": "Selected work", "title": "Work that moves" },

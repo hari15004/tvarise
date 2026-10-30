@@ -60,6 +60,12 @@ button {
 }
 
 @media (max-width: 640px) {
+  :root {
+    --gutter: clamp(1rem, 5vw, 1.4rem);
+  }
+  .section {
+    padding-block: clamp(3.75rem, 14vw, 5.5rem);
+  }
   .grain {
     display: none;
   }
@@ -72,11 +78,13 @@ button {
 
   /* Hero: keep tagline and title from colliding */
   .hero__title {
-    font-size: clamp(2.4rem, 11.5vw, 3.4rem);
-    max-width: 12ch;
+    font-size: clamp(2.2rem, 10vw, 3rem);
+    max-width: 13ch;
+    line-height: 1.05;
+    text-wrap: balance;
   }
   .hero__tagline {
-    max-width: 78vw;
+    max-width: 58vw;
     font-size: clamp(1.05rem, 4.6vw, 1.4rem);
     line-height: 1.35;
   }
@@ -89,10 +97,11 @@ button {
 
   /* Services: shorter sticky cards */
   .svc__inner {
-    min-height: clamp(240px, 44svh, 340px);
+    min-height: clamp(250px, 48svh, 380px);
+    border-radius: 16px;
   }
   .svc__title {
-    font-size: clamp(2rem, 10vw, 3rem);
+    font-size: clamp(1.9rem, 8vw, 2.7rem);
   }
 
   /* Process and team */
@@ -108,18 +117,51 @@ button {
   .team-card__name {
     font-size: var(--step-0);
   }
+  .work__grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-4);
+  }
+  .work-card__media {
+    aspect-ratio: 16 / 10;
+  }
+  .work-card__title {
+    font-size: var(--step-1);
+  }
+  .building--projects {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .building__complete-edit,
+  .building__add-project,
+  .work__add-project,
+  .team__add-person,
+  .svc__add-service {
+    min-height: 44px;
+    max-width: 100%;
+    text-align: left;
+    white-space: normal;
+  }
+  .footer__social-link {
+    min-height: 42px;
+  }
+  .contact-form {
+    padding: 1rem;
+  }
+  .contact-form input,
+  .contact-form textarea {
+    font-size: 16px;
+  }
 
   .cta__title {
-    font-size: clamp(2.4rem, 11.5vw, 3.4rem);
+    font-size: clamp(2.2rem, 10vw, 3rem);
   }
 }
 
 /* Layout C: text on the left, horse fully visible on the right */
 @media (max-width: 640px) {
   .hero__tagline {
-    max-width: 46vw;
+    max-width: 58vw;
     font-family: var(--font-head);
-    font-size: clamp(1.05rem, 5vw, 1.35rem);
+    font-size: clamp(1rem, 4.5vw, 1.25rem);
     font-weight: 500;
     line-height: 1.3;
     letter-spacing: -0.01em;
@@ -189,4 +231,45 @@ button {
 }
 .team-card__link:hover {
   color: var(--accent);
+}
+
+@media (max-width: 420px) {
+  .team {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-4);
+  }
+  .team-card__media {
+    aspect-ratio: 16 / 10;
+  }
+  .team-card__img {
+    inset: -8% 0;
+    height: 116%;
+  }
+  .member__top {
+    gap: var(--space-4);
+  }
+  .member__photo {
+    width: 100%;
+    max-width: none;
+    aspect-ratio: 4 / 3;
+  }
+  .member__work {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .member-editor__backdrop {
+    padding-top: env(safe-area-inset-top);
+  }
+  .member-editor__header,
+  .member-editor__footer {
+    padding-inline: 1rem;
+  }
+  .member-editor__body {
+    padding: 1rem;
+  }
+  .member-editor__section-heading {
+    align-items: flex-start;
+  }
+  .member-editor__section-heading > button {
+    flex: 0 0 auto;
+  }
 }

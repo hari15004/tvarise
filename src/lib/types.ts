@@ -3,12 +3,19 @@ export type NavItem = { label: string; href: string };
 export type SiteSettings = {
   placeholder?: boolean;
   name: string;
+  logo?: string;
   tagline: string;
   accentColor: string;
   heroTitle: string;
   heroSubtitle: string;
+  heroTagline: string;
+  heroWorkLabel: string;
+  viewProjectLabel: string;
+  scrollLabel: string;
   contactEmail: string;
   footerContactLabel: string;
+  socialLabel: string;
+  memberSectionLabels: { about: string; skills: string; work: string; links: string };
   nav: NavItem[];
   cta: NavItem;
   social: NavItem[];
@@ -51,6 +58,7 @@ export type Project = CollectionItem & {
   cover: string | null;
   summary: string;
   featured: boolean;
+  inProgress?: boolean;
   clientName?: string;
 };
 
@@ -64,6 +72,11 @@ export type BuildingItem = CollectionItem & {
 
 export type HomeContent = {
   placeholder?: boolean;
+  sectionOrder?: ("services" | "work" | "building" | "process" | "team" | "about" | "cta")[];
+  sectionVisibility?: Record<
+    "services" | "work" | "building" | "process" | "team" | "about" | "cta",
+    boolean
+  >;
   sections?: Record<
     "services" | "work" | "building" | "process" | "team",
     { label: string; title: string }

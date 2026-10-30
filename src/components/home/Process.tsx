@@ -32,8 +32,22 @@ export function Process({
               <li key={step.title} className="process__step" data-step data-reveal>
                 <span className="process__n">{String(i + 1).padStart(2, "0")}</span>
                 <div>
-                  <h3 className="process__title">{step.title}</h3>
-                  <p className="process__text">{step.text}</p>
+                  <h3
+                    className="process__title"
+                    data-edit-collection="home"
+                    data-edit-slug="singleton"
+                    data-edit-field={`process.${i}.title`}
+                  >
+                    {step.title}
+                  </h3>
+                  <p
+                    className="process__text"
+                    data-edit-collection="home"
+                    data-edit-slug="singleton"
+                    data-edit-field={`process.${i}.text`}
+                  >
+                    {step.text}
+                  </p>
                 </div>
               </li>
             ))}

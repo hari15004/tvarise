@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
 import { notFound } from "next/navigation";
-import { getTeam } from "@/lib/content";
+import { getSite, getTeam } from "@/lib/content";
 import { getMemberLive } from "@/lib/members";
 import { createClient } from "@/lib/supabase/server";
 import EditPanel from "./EditPanel";
@@ -22,6 +22,11 @@ type EditInitial = {
   skills: string[];
   email: string;
   available: boolean;
+  short_line: string;
+  links: { label: string; href: string }[];
+  work: { title: string; summary: string; link?: string; image?: string }[];
+  portfolioUrl: string;
+  portrait: string | null;
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -58,10 +63,11 @@ async function EditGate({ slug, initial }: { slug: string; initial: EditInitial 
 
 export default async function Page({ params }: Props) {
   const { slug } = await params;
-  const m = await getMemberLive(slug);
+  const [m, site] = await Promise.all([getMemberLive(slug), getSite()]);
   if (!m) notFound();
 
   const contact = m.email ? `mailto:${m.email}` : "/contact";
+  const portfolioLink = m.links.find((link) => link.label.toLowerCase() === "portfolio");
 
   return (
     <section className="member">
@@ -75,6 +81,11 @@ export default async function Page({ params }: Props) {
             skills: m.skills ?? [],
             email: m.email ?? "",
             available: !!m.available,
+            short_line: m.shortLine ?? "",
+            links: m.links ?? [],
+            work: m.work ?? [],
+            portfolioUrl: m.links.find((link) => link.label.toLowerCase() === "portfolio")?.href ?? "",
+            portrait: m.portrait ?? null,
           }}
         />
       </Suspense>
@@ -93,28 +104,36 @@ export default async function Page({ params }: Props) {
             )}
           </div>
           <div className="member__intro">
-            {m.available ? (
-              <p className="member__avail">
-                <i aria-hidden="true" /> Available for work
-              </p>
-            ) : null}
+            <p className={`member__avail${m.available ? " is-available" : " is-unavailable"}`}>
+              <i aria-hidden="true" /> {m.available ? "Available for work" : "Not available for work"}
+            </p>
             <h1 className="member__name">{m.name}</h1>
             <p className="member__role">{m.role}</p>
             <p className="member__line">{m.shortLine}</p>
             <a href={contact} className="btn btn--primary">
               Hire {m.name.split(" ")[0]}
             </a>
+            {portfolioLink && (
+              <a
+                href={portfolioLink.href}
+                className="btn btn--ghost"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                View portfolio ↗
+              </a>
+            )}
           </div>
         </div>
 
         <div className="member__block">
-          <h2 className="member__h">About</h2>
+          <h2 className="member__h">{site.memberSectionLabels.about}</h2>
           <p className="member__bio">{m.bio}</p>
         </div>
 
         {m.skills && m.skills.length > 0 ? (
           <div className="member__block">
-            <h2 className="member__h">Skills</h2>
+            <h2 className="member__h">{site.memberSectionLabels.skills}</h2>
             <ul className="member__skills">
               {m.skills.map((s) => (
                 <li key={s}>{s}</li>
@@ -125,7 +144,7 @@ export default async function Page({ params }: Props) {
 
         {m.work && m.work.length > 0 ? (
           <div className="member__block">
-            <h2 className="member__h">Work</h2>
+            <h2 className="member__h">{site.memberSectionLabels.work}</h2>
             <ul className="member__work">
               {m.work.map((w) => (
                 <li key={w.title} className="member__item">
@@ -137,7 +156,7 @@ export default async function Page({ params }: Props) {
                   <p>{w.summary}</p>
                   {w.link ? (
                     <a href={w.link} target="_blank" rel="noopener noreferrer">
-                      View project &rarr;
+                      {site.viewProjectLabel} &rarr;
                     </a>
                   ) : null}
                 </li>
@@ -148,7 +167,7 @@ export default async function Page({ params }: Props) {
 
         {m.links.length > 0 ? (
           <div className="member__block">
-            <h2 className="member__h">Find me on</h2>
+            <h2 className="member__h">{site.memberSectionLabels.links}</h2>
             <ul className="member__links">
               {m.links.map((l) => (
                 <li key={l.href}>

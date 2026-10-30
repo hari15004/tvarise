@@ -46,6 +46,11 @@ export function Team({
             </li>
           ))}
         </ul>
+        <div className="team__actions">
+          <button type="button" className="team__add-person" data-edit-add-person>
+            + Add person
+          </button>
+        </div>
       </div>
     </section>
   );

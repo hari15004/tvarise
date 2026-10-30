@@ -2,6 +2,7 @@
 
 import { revalidatePath, revalidateTag } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { getAdminContentSnapshot } from "@/lib/content";
 import type { CmsCollection } from "@/lib/types";
 
 const collections: CmsCollection[] = ["site", "home", "services", "team", "projects", "building"];
@@ -46,6 +47,7 @@ function isValidDocument(collection: CmsCollection, slug: string, value: unknown
   if (!isRecord(value)) return false;
   if (collection === "site") {
     const pages = value.pages;
+    const memberSectionLabels = value.memberSectionLabels;
     return (
       isString(value.name) &&
       isString(value.tagline) &&
@@ -53,13 +55,26 @@ function isValidDocument(collection: CmsCollection, slug: string, value: unknown
       /^#[\da-f]{6}$/i.test(value.accentColor) &&
       isString(value.heroTitle) &&
       isString(value.heroSubtitle) &&
+      isString(value.heroTagline) &&
+      isString(value.heroWorkLabel) &&
+      isString(value.viewProjectLabel) &&
+      isString(value.scrollLabel) &&
       isString(value.contactEmail) &&
       isString(value.footerContactLabel) &&
+      isString(value.socialLabel) &&
+      isRecord(memberSectionLabels) &&
+      ["about", "skills", "work", "links"].every((key) =>
+        isString(memberSectionLabels[key])
+      ) &&
       Array.isArray(value.nav) &&
       value.nav.every(isLink) &&
       isLink(value.cta) &&
       Array.isArray(value.social) &&
-      value.social.every(isLink) &&
+      value.social.every((item) =>
+        isRecord(item) &&
+        isString(item.label) &&
+        (item.href === "" || isSafeHref(item.href))
+      ) &&
       (pages === undefined ||
         (isRecord(pages) &&
           ["work", "services", "about", "contact"].every(
@@ -74,7 +89,22 @@ function isValidDocument(collection: CmsCollection, slug: string, value: unknown
   if (collection === "home") {
     const about = value.about;
     const sections = value.sections;
+    const sectionOrder = value.sectionOrder;
+    const sectionVisibility = value.sectionVisibility;
     return (
+      (sectionVisibility === undefined ||
+        (isRecord(sectionVisibility) &&
+          ["services", "work", "building", "process", "team", "about", "cta"].every(
+            (key) => typeof sectionVisibility[key] === "boolean"
+          ))) &&
+      (sectionOrder === undefined ||
+        (Array.isArray(sectionOrder) &&
+          sectionOrder.every((key) =>
+            ["services", "work", "building", "process", "team", "about", "cta"].includes(
+              String(key)
+            )
+          ) &&
+          new Set(sectionOrder).size === sectionOrder.length)) &&
       (sections === undefined ||
         (isRecord(sections) &&
           ["services", "work", "building", "process", "team"].every(
@@ -131,7 +161,20 @@ function isValidDocument(collection: CmsCollection, slug: string, value: unknown
       (value.published === false ||
         (isNonEmptyString(value.name) &&
           isNonEmptyString(value.role) &&
-          isNonEmptyString(value.pieceId)))
+          isNonEmptyString(value.pieceId))) &&
+      (value.email === undefined || isString(value.email)) &&
+      (value.available === undefined || typeof value.available === "boolean") &&
+      (value.skills === undefined || isStringArray(value.skills)) &&
+      (value.work === undefined ||
+        (Array.isArray(value.work) &&
+          value.work.every(
+            (item) =>
+              isRecord(item) &&
+              isString(item.title) &&
+              isString(item.summary) &&
+              (item.link === undefined || isSafeHref(item.link)) &&
+              (item.image === undefined || isString(item.image))
+          )))
     );
   }
   if (collection === "projects") {
@@ -143,6 +186,7 @@ function isValidDocument(collection: CmsCollection, slug: string, value: unknown
       (value.cover === null || isString(value.cover)) &&
       isString(value.summary) &&
       typeof value.featured === "boolean" &&
+      (value.inProgress === undefined || typeof value.inProgress === "boolean") &&
       (value.published === false || isNonEmptyString(value.title))
     );
   }
@@ -216,6 +260,23 @@ export async function saveContentDocument(
 
   invalidateContent(collection);
   return { ok: true, error: "" };
+}
+
+export async function getInlineEditorContent(): Promise<
+  { ok: true; documents: Awaited<ReturnType<typeof getAdminContentSnapshot>> } |
+  { ok: false; error: string }
+> {
+  const access = await requireAdmin();
+  if (!access.supabase) return { ok: false, error: access.error };
+
+  try {
+    return { ok: true, documents: await getAdminContentSnapshot() };
+  } catch (error) {
+    return {
+      ok: false,
+      error: error instanceof Error ? error.message : "Website content load nahi ho paya.",
+    };
+  }
 }
 
 export async function deleteContentDocument(

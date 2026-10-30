@@ -4,6 +4,7 @@ import { Inter, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import "./home.css";
 import "./mobile.css";
+import "./admin/site-visual-editor.css";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { Intro } from "@/components/Intro";
@@ -11,6 +12,7 @@ import { MotionProvider } from "@/motion/MotionProvider";
 import { Cursor } from "@/motion/Cursor";
 import { SculptureStage } from "@/three/SculptureStage";
 import { getSite, getTeam } from "@/lib/content";
+import { SiteVisualEditor } from "@/app/admin/SiteVisualEditor";
 
 const display = Space_Grotesk({
   subsets: ["latin"],
@@ -66,9 +68,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           Skip to content
         </a>
         <MotionProvider>
+          <SiteVisualEditor />
           <Intro name={site.name} />
           <SculptureStage pieces={pieces} />
-          <Navbar name={site.name} items={site.nav} cta={site.cta} />
+          <Navbar name={site.name} logo={site.logo} items={site.nav} cta={site.cta} />
           <main id="main">{children}</main>
           <Footer site={site} />
           <Cursor />

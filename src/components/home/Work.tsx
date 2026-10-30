@@ -6,12 +6,15 @@ export function Work({
   index,
   items,
   heading,
+  showMore = true,
 }: {
   index: string;
   items: Project[];
   heading?: { label: string; title: string };
+  showMore?: boolean;
 }) {
   if (items.length === 0) return null;
+  const visibleItems = showMore ? items.slice(0, 6) : items;
 
   return (
     <section id="work" className="section" aria-label="Selected work">
@@ -22,11 +25,17 @@ export function Work({
           title={heading?.title ?? "Work that moves"}
         />
         <ul className="work__grid">
-          {items.map((project, i) => (
+          {visibleItems.map((project, i) => (
             <li key={project.slug} className="work-card">
               {/* Detail pages come later; for now every card opens the work index. */}
               <Link href="/work" className="work-card__link" data-cursor>
-                <div className="work-card__media" data-clip>
+                <div
+                  className="work-card__media"
+                  data-clip
+                  data-edit-collection="projects"
+                  data-edit-slug={project.slug}
+                  data-edit-field="cover"
+                >
                   {project.cover ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img className="work-card__img" src={project.cover} alt="" data-parallax />
@@ -44,10 +53,15 @@ export function Work({
             </li>
           ))}
         </ul>
-        <div className="section__more" data-reveal>
-          <Link href="/work" className="btn btn--ghost" data-magnetic>
-            All work
-          </Link>
+        <div className="work__actions" data-reveal>
+          {showMore && items.length > visibleItems.length && (
+            <Link href="/work" className="btn btn--ghost" data-magnetic>
+              See more
+            </Link>
+          )}
+          <button type="button" className="work__add-project" data-edit-add-project="work">
+            + Add project
+          </button>
         </div>
       </div>
     </section>

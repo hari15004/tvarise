@@ -99,7 +99,14 @@ export async function getSite(): Promise<SiteSettings> {
   "use cache";
   cacheLife("minutes");
   cacheTag("cms-site");
-  return getDocument<SiteSettings>("site", "site.json");
+  const site = await getDocument<SiteSettings>("site", "site.json");
+  return {
+    ...site,
+    contactEmail: site.contactEmail === "placeholder@example.com" ? "hey@tvarise.com" : site.contactEmail,
+    social: site.social.length > 0
+      ? site.social
+      : ["Instagram", "LinkedIn", "Facebook"].map((label) => ({ label, href: "" })),
+  };
 }
 
 export async function getHome(): Promise<HomeContent> {
@@ -120,7 +127,33 @@ export async function getTeam(): Promise<TeamMember[]> {
   "use cache";
   cacheLife("minutes");
   cacheTag("cms-team");
-  return getCollection<TeamMember>("team", "team");
+  const team = await getCollection<TeamMember>("team", "team");
+  const client = getCmsClient();
+  if (!client || team.length === 0) return team;
+
+  const { data, error } = await client
+    .from("members")
+    .select("slug, name, role_title, short_line, bio, portrait, links, skills, email, available, work");
+  if (error) throw new Error(`Could not load team profiles: ${error.message}`);
+
+  const profiles = new Map((data ?? []).map((member) => [member.slug, member]));
+  return team.map((member) => {
+    const profile = profiles.get(member.slug);
+    if (!profile) return member;
+    return {
+      ...member,
+      name: profile.name || member.name,
+      role: profile.role_title || member.role,
+      shortLine: profile.short_line || member.shortLine,
+      bio: profile.bio || member.bio,
+      portrait: profile.portrait || member.portrait || null,
+      links: Array.isArray(profile.links) ? profile.links : member.links,
+      skills: Array.isArray(profile.skills) ? profile.skills : member.skills ?? [],
+      email: profile.email || member.email,
+      available: profile.available ?? member.available,
+      work: Array.isArray(profile.work) ? profile.work : member.work ?? [],
+    };
+  });
 }
 
 export async function getProjects(): Promise<Project[]> {
@@ -131,7 +164,9 @@ export async function getProjects(): Promise<Project[]> {
 }
 
 export async function getFeaturedProjects(): Promise<Project[]> {
-  return (await getProjects()).filter((project) => project.featured);
+  return (await getProjects()).filter(
+    (project) => project.featured && !project.placeholder && !project.inProgress
+  );
 }
 
 export async function getBuildingItems(): Promise<BuildingItem[]> {

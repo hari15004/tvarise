@@ -15,11 +15,11 @@
   --font-sans: var(--font-body), system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-head: var(--font-display), var(--font-body), system-ui, sans-serif;
   --step--1: clamp(0.8rem, 0.78rem + 0.1vw, 0.875rem);
-  --step-0: clamp(1rem, 0.96rem + 0.2vw, 1.125rem);
-  --step-1: clamp(1.25rem, 1.1rem + 0.7vw, 1.6rem);
-  --step-2: clamp(1.6rem, 1.3rem + 1.4vw, 2.4rem);
-  --step-3: clamp(2.2rem, 1.6rem + 3vw, 4rem);
-  --step-4: clamp(2.8rem, 1.5rem + 6.5vw, 7rem);
+  --step-0: clamp(1rem, 0.97rem + 0.15vw, 1.1rem);
+  --step-1: clamp(1.15rem, 1.07rem + 0.45vw, 1.4rem);
+  --step-2: clamp(1.45rem, 1.25rem + 0.9vw, 2rem);
+  --step-3: clamp(2rem, 1.65rem + 2.2vw, 3.4rem);
+  --step-4: clamp(2.5rem, 1.9rem + 4.2vw, 5.2rem);
 
   /* Spacing */
   --space-1: 0.25rem;
@@ -67,7 +67,7 @@ body {
   color: var(--ink);
   font-family: var(--font-sans);
   font-size: var(--step-0);
-  line-height: 1.6;
+  line-height: 1.65;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   overflow-x: clip;
@@ -77,8 +77,9 @@ h2,
 h3,
 h4 {
   font-family: var(--font-head);
-  line-height: 1.05;
-  letter-spacing: -0.02em;
+  line-height: 1.12;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
 }
 a {
   color: inherit;
@@ -258,6 +259,10 @@ html[data-motion="on"] .mask__inner {
   position: sticky;
   top: 0;
   z-index: 50;
+  transition: transform 0.3s var(--ease-out);
+}
+.nav--hidden {
+  transform: translateY(-100%);
 }
 .nav::before {
   content: "";
@@ -387,6 +392,11 @@ html[data-motion="on"][data-nav-in] .nav__inner {
   .nav__toggle,
   .menu {
     display: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nav {
+    transition: none;
   }
 }
 
@@ -723,6 +733,63 @@ html[data-cursor="on"] .cursor {
 .footer__link:hover {
   color: var(--accent);
 }
+.footer__social-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+.footer__social-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--ink);
+  font-size: var(--step--1);
+  transition: color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out);
+}
+.footer__social-link:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.footer__social-link.is-unlinked {
+  color: var(--muted);
+  cursor: default;
+}
+.footer__social-link.is-unlinked:hover {
+  border-color: var(--line);
+  color: var(--muted);
+}
+.footer__social-link svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.7;
+}
+.footer__social-dot {
+  fill: currentColor;
+  stroke: none;
+}
+.footer__edit-social {
+  display: none;
+  margin-top: var(--space-3);
+  padding: 0.55rem 0.7rem;
+  border: 1px dashed var(--line);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--accent);
+  font: inherit;
+  font-size: var(--step--1);
+  cursor: pointer;
+}
+body[data-site-edit-mode="true"] .footer__edit-social {
+  display: inline-flex;
+  align-items: center;
+}
 .footer__bottom {
   display: flex;
   flex-wrap: wrap;
@@ -732,6 +799,86 @@ html[data-cursor="on"] .cursor {
   padding-block: var(--space-5);
   color: var(--muted);
   font-size: var(--step--1);
+}
+
+/* ---- Contact page ---- */
+.contact-page__grid {
+  display: grid;
+  gap: var(--space-6);
+  align-items: start;
+}
+.contact-page__details,
+.contact-form {
+  display: grid;
+  gap: var(--space-3);
+}
+.contact-page__details h2,
+.contact-form h2 {
+  font-size: var(--step-2);
+}
+.contact-page__details > p,
+.contact-form__hint {
+  color: var(--muted);
+}
+.contact-page__email,
+.contact-page__services,
+.contact-page__social a {
+  color: var(--accent);
+}
+.contact-page__notice,
+.contact-form__message {
+  padding: var(--space-3);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-s);
+  color: var(--muted);
+}
+.contact-page__social {
+  display: grid;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+}
+.contact-page__social h3 {
+  color: var(--muted);
+  font-size: var(--step--1);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.contact-page__social ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+.contact-form {
+  padding: clamp(1.25rem, 3vw, 2rem);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-m);
+  background: var(--surface);
+}
+.contact-form label {
+  display: grid;
+  gap: 0.45rem;
+  font-size: var(--step--1);
+}
+.contact-form input,
+.contact-form textarea {
+  width: 100%;
+  padding: 0.8rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-s);
+  background: var(--bg);
+  color: var(--ink);
+  font: inherit;
+}
+.contact-form textarea {
+  resize: vertical;
+}
+.contact-form__hint {
+  font-size: var(--step--1);
+}
+@media (min-width: 860px) {
+  .contact-page__grid {
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  }
 }
 @media (min-width: 760px) {
   .footer__grid {
@@ -767,4 +914,54 @@ html[data-cursor="on"] .cursor {
   letter-spacing: 0.01em;
   color: rgba(255, 255, 255, 0.88);
   pointer-events: none;
+}
+
+@media (max-width: 640px) {
+  .nav__inner {
+    gap: 0.5rem;
+  }
+  .brand {
+    min-width: 0;
+    max-width: 36vw;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .nav__right {
+    gap: 0.5rem;
+  }
+  .nav__right > .btn {
+    min-height: 40px;
+    padding-inline: 0.75rem;
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+  }
+  .nav__toggle {
+    width: 40px;
+    height: 40px;
+    flex: 0 0 40px;
+  }
+  .hero__bigname {
+    top: calc(var(--nav-h) + 4vh);
+    max-width: calc(100vw - 2 * var(--gutter));
+    overflow: hidden;
+    font-size: clamp(2.7rem, 13vw, 5rem);
+    letter-spacing: -0.045em;
+  }
+  .hero__tagline {
+    top: calc(var(--nav-h) + 4vh + clamp(3rem, 13vw, 5rem) + 1.25rem);
+    max-width: min(58vw, 18rem);
+    font-size: clamp(1rem, 4.5vw, 1.25rem);
+    line-height: 1.3;
+  }
+}
+
+@media (max-width: 380px) {
+  .nav__right > .btn {
+    padding-inline: 0.55rem;
+    font-size: 0.66rem;
+  }
+  .brand {
+    max-width: 31vw;
+  }
 }

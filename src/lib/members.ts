@@ -18,13 +18,6 @@ export async function getMemberLive(slug: string): Promise<TeamMember | null> {
   if (!url || !key) return base;
 
   const supabase = createClient(url, key);
-  const { data: cmsContent, error: cmsError } = await supabase
-    .rpc("get_public_cms_content", { target_collection: "team" })
-    .eq("slug", slug)
-    .maybeSingle();
-  if (cmsError) throw new Error(`Could not load team content for "${slug}": ${cmsError.message}`);
-  if (cmsContent) return base;
-
   const { data } = await supabase
     .from("members")
     .select("*")
@@ -36,14 +29,14 @@ export async function getMemberLive(slug: string): Promise<TeamMember | null> {
   return {
     ...base,
     name: data.name || base.name,
-    role: data.role_title,
-    shortLine: data.short_line,
-    bio: data.bio,
-    portrait: data.portrait || null,
-    links: Array.isArray(data.links) ? data.links : [],
-    skills: data.skills ?? [],
-    email: data.email,
-    available: data.available,
-    work: Array.isArray(data.work) ? data.work : [],
+    role: data.role_title || base.role,
+    shortLine: data.short_line || base.shortLine,
+    bio: data.bio || base.bio,
+    portrait: data.portrait || base.portrait || null,
+    links: Array.isArray(data.links) ? data.links : base.links,
+    skills: Array.isArray(data.skills) ? data.skills : base.skills ?? [],
+    email: data.email || base.email,
+    available: data.available ?? base.available,
+    work: Array.isArray(data.work) ? data.work : base.work ?? [],
   };
 }

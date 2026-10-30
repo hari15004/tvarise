@@ -184,29 +184,269 @@
   cursor: wait;
   opacity: 0.6;
 }
-.admin__editor textarea {
+.admin__fields {
+  display: grid;
+  gap: 1rem;
+}
+.admin__fields--root {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+}
+.admin__field {
+  display: grid;
+  min-width: 0;
+  gap: 0.4rem;
+  color: var(--ink);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+.admin__field input,
+.admin__field textarea,
+.admin__control,
+.admin__array-item > input {
   width: 100%;
-  min-height: 390px;
-  flex: 1;
-  resize: vertical;
-  padding: 1rem;
+  min-width: 0;
+  padding: 0.75rem 0.85rem;
   border: 1px solid var(--line);
-  border-radius: 10px;
+  border-radius: 9px;
   background: #080809;
   color: var(--ink);
-  font: 0.88rem/1.6 ui-monospace, SFMono-Regular, Menlo, monospace;
-  tab-size: 2;
+  font: 400 0.92rem/1.5 var(--font-sans);
 }
-.admin__help {
-  margin-top: 0.75rem;
-  font-size: 0.8rem;
+.admin__field textarea {
+  min-height: 100px;
+  resize: vertical;
 }
-.admin__help code {
+.admin__field input:read-only {
+  opacity: 0.65;
+}
+.admin__field-hint {
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 400;
+  overflow-wrap: anywhere;
+}
+.admin__image-preview {
+  width: 112px;
+  height: 84px;
+  flex: 0 0 auto;
+  object-fit: cover;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: #080809;
+}
+.admin__media {
+  display: grid;
+  min-width: 0;
+  gap: 0.65rem;
+}
+.admin__upload {
+  display: flex;
+  min-height: 112px;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  border: 1px dashed color-mix(in srgb, var(--accent) 42%, var(--line));
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--accent) 3%, #080809);
+  transition: border-color 160ms ease, background 160ms ease;
+}
+.admin__upload.is-dragging,
+.admin__upload:hover {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 7%, #080809);
+}
+.admin__upload.is-uploading {
+  opacity: 0.75;
+}
+.admin__upload-icon {
+  display: grid;
+  width: 44px;
+  height: 44px;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: 12px;
   color: var(--accent);
+  font-size: 1.5rem;
+}
+.admin__upload-copy {
+  display: grid;
+  min-width: 0;
+  flex: 1;
+  gap: 0.3rem;
+}
+.admin__upload-copy strong {
+  color: var(--ink);
+  font-size: 0.9rem;
+}
+.admin__upload-copy span {
+  color: var(--muted);
+  font-size: 0.78rem;
+  line-height: 1.5;
+}
+.admin__upload-button {
+  min-height: 40px;
+  flex: 0 0 auto;
+  padding: 0.55rem 0.8rem;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 650;
+  cursor: pointer;
+}
+.admin__upload-button:hover:not(:disabled) {
+  border-color: var(--accent);
+}
+.admin__upload-button:disabled {
+  cursor: wait;
+  opacity: 0.6;
+}
+.admin__file-input {
+  display: none;
+}
+.admin__media-url {
+  font-size: 0.78rem;
+}
+.admin__upload-error,
+.admin__upload-notice {
+  margin: 0;
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
+.admin__upload-error {
+  color: #ff9a9a;
+}
+.admin__upload-notice {
+  color: var(--accent);
+}
+.admin__toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  min-height: 48px;
+  padding: 0.7rem 0.8rem;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: #080809;
+  cursor: pointer;
+}
+.admin__toggle input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--accent);
+}
+.admin__group {
+  min-width: 0;
+  padding: 1rem;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+.admin__group legend {
+  padding: 0 0.4rem;
+  color: var(--ink);
+  font-family: var(--font-head);
+  font-size: 1rem;
+  font-weight: 700;
+}
+.admin__array {
+  display: grid;
+  gap: 0.75rem;
+}
+.admin__array-item {
+  min-width: 0;
+  padding: 0.8rem;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.2);
+}
+.admin__array-actions,
+.admin__array-actions > div,
+.admin__section-order li,
+.admin__section-order li > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.45rem;
+}
+.admin__array-actions {
+  margin-bottom: 0.65rem;
+  font-size: 0.82rem;
+}
+.admin__array-actions button,
+.admin__section-order button {
+  min-width: 34px;
+  min-height: 34px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: var(--surface);
+  color: var(--ink);
+  cursor: pointer;
+}
+.admin__array-actions button:disabled,
+.admin__section-order button:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+.admin__array-actions .admin__array-remove {
+  padding: 0 0.55rem;
+  color: #ff9a9a;
+}
+.admin__add-item {
+  margin-top: 0.75rem;
+  padding: 0.55rem 0.8rem;
+  border: 1px dashed var(--line);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--accent);
+  cursor: pointer;
+}
+.admin__section-order > p {
+  margin-bottom: 0.6rem;
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+.admin__section-order ol {
+  display: grid;
+  gap: 0.4rem;
+}
+.admin__section-order li {
+  padding: 0.4rem 0.55rem;
+  border: 1px solid var(--line);
+  border-radius: 8px;
 }
 .admin__message {
   margin-top: 0.5rem;
   color: var(--accent);
+}
+.admin__editor-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 1.25rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+.admin__editor-footer a {
+  flex: 0 0 auto;
+  color: var(--accent);
+}
+@media (max-width: 620px) {
+  .admin__upload {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+  .admin__upload-copy {
+    flex-basis: calc(100% - 60px);
+  }
+  .admin__upload-button {
+    margin-left: 60px;
+  }
 }
 .admin__notice {
   width: min(700px, calc(100% - 2rem));
@@ -268,7 +508,10 @@
   .admin__editor {
     padding: 1rem;
   }
-  .admin__editor textarea {
-    min-height: 55vh;
+  .admin__fields--root {
+    grid-template-columns: 1fr;
+  }
+  .admin__editor-footer {
+    flex-direction: column;
   }
 }

@@ -15,11 +15,22 @@ type Props = {
   bigName: string;
   tags: string[];
   placeholder: boolean;
+  tagline: string;
+  workLabel: string;
+  scrollLabel: string;
 };
 
-const TAGLINE = "Where Creativity, Design & Technology Rise Together";
-
-export function Hero({ title, sub, ctaLabel, ctaHref, bigName, tags }: Props) {
+export function Hero({
+  title,
+  sub,
+  ctaLabel,
+  ctaHref,
+  bigName,
+  tags,
+  tagline,
+  workLabel,
+  scrollLabel,
+}: Props) {
   const rootRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -119,7 +130,7 @@ export function Hero({ title, sub, ctaLabel, ctaHref, bigName, tags }: Props) {
     };
   }, []);
 
-  const words = TAGLINE.split(" ");
+  const words = tagline.split(" ");
 
   return (
     <section ref={rootRef} className="hero" aria-labelledby="hero-title">
@@ -128,7 +139,7 @@ export function Hero({ title, sub, ctaLabel, ctaHref, bigName, tags }: Props) {
           {bigName}
         </p>
 
-        <p className="hero__tagline" aria-label={TAGLINE}>
+        <p className="hero__tagline" aria-label={tagline}>
           {words.map((word, wi) => (
             <Fragment key={wi}>
               <span aria-hidden="true" style={{ display: "inline-block", whiteSpace: "nowrap" }}>
@@ -155,7 +166,7 @@ export function Hero({ title, sub, ctaLabel, ctaHref, bigName, tags }: Props) {
               {ctaLabel}
             </Link>
             <Link href="/work" className="btn btn--ghost" data-magnetic>
-              See the work
+              {workLabel}
             </Link>
           </div>
         </div>
@@ -167,7 +178,7 @@ export function Hero({ title, sub, ctaLabel, ctaHref, bigName, tags }: Props) {
             ))}
           </ul>
           <span className="hero__cue" aria-hidden="true">
-            Scroll
+            {scrollLabel}
           </span>
         </div>
       </div>
