@@ -12,9 +12,10 @@ type Props = {
   ctaLabel: string;
   ctaHref: string;
   wordmark: string;
+  label: string;
 };
 
-export function FinalCta({ index, title, text, ctaLabel, ctaHref, wordmark }: Props) {
+export function FinalCta({ index, title, text, ctaLabel, ctaHref, wordmark, label }: Props) {
   const ref = useRef<HTMLElement>(null);
 
   // While this section scrolls in, the 3D pieces fly back together (see sculpture.ts).
@@ -42,7 +43,7 @@ export function FinalCta({ index, title, text, ctaLabel, ctaHref, wordmark }: Pr
       <div className="container cta__inner">
         <p className="sec-label" data-reveal>
           <span className="sec-label__n">{index}</span>
-          Let&apos;s work
+          {label}
         </p>
         <h2 className="cta__title" data-reveal>
           {title}

@@ -9,8 +9,8 @@ import EditPanel from "./EditPanel";
 import "./member.css";
 
 
-export function generateStaticParams() {
-  return getTeam().map((m) => ({ slug: m.slug }));
+export async function generateStaticParams() {
+  return (await getTeam()).map((m) => ({ slug: m.slug }));
 }
 
 type Props = { params: Promise<{ slug: string }> };

@@ -20,7 +20,12 @@ export default function LoginForm() {
       setError("Email ya password galat hai.");
       return;
     }
-    window.location.href = "/";
+    const requestedPath = new URLSearchParams(window.location.search).get("next");
+    const destination =
+      requestedPath?.startsWith("/") && !requestedPath.startsWith("//")
+        ? requestedPath
+        : "/";
+    window.location.href = destination;
   }
 
   return (

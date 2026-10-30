@@ -15,7 +15,7 @@ Planned architecture. Nothing here is implemented yet. Changes must be recorded 
 - The 3D canvas is decorative: hidden from assistive tech, `pointer-events: none` behind content.
 
 ## 3. Content flow
-`/content` files -> schema validation (Zod, at build) -> typed loaders in `/src/lib` -> section and page components.
+`/content` JSON defaults + admin overrides in Supabase -> typed loaders in `/src/lib` -> section and page components. Public content reads use a Supabase RPC that returns published records and redacts drafts; admin writes are validated server-side and protected by RLS. The repository files remain the fallback/default source.
 - Relationships by ID: project -> services -> team members. Derived lists (for example related projects) are computed, never duplicated by hand.
 - A CMS could replace the file source later without changing components, as long as the schema stays the same.
 
@@ -59,9 +59,9 @@ Form -> client validation -> server route (re-validation, rate limit, spam check
 Load order: HTML/text, fonts, hero visuals, 3D stage, below-the-fold media. Animate transform and opacity only. Cap device pixel ratio on phones. Code-split 3D and animation libraries so Static-tier users never download them.
 
 ## 11. Extension points
-- **Add a team member:** new file in `/content/team` + piece entry; no component change.
-- **Add a service:** new file in `/content/services`; the pinned sequence picks it up.
-- **Add a project:** new folder in `/content/projects`.
+- **Add a team member:** create a record in `/admin` (or add a file in `/content/team`) + piece entry; no component change.
+- **Add a service:** create a record in `/admin` (or add a file in `/content/services`); the pinned sequence picks it up.
+- **Add a project:** create a record in `/admin` (or add a folder in `/content/projects`).
 - **Add a case-study block type:** new component registered in the block map; record in `DECISIONS.md`.
 - **Add a CMS:** swap the content source behind the loaders.
 

@@ -2,13 +2,25 @@ import Link from "next/link";
 import type { Project } from "@/lib/types";
 import { SectionHead } from "./SectionHead";
 
-export function Work({ index, items }: { index: string; items: Project[] }) {
+export function Work({
+  index,
+  items,
+  heading,
+}: {
+  index: string;
+  items: Project[];
+  heading?: { label: string; title: string };
+}) {
   if (items.length === 0) return null;
 
   return (
     <section id="work" className="section" aria-label="Selected work">
       <div className="container">
-        <SectionHead index={index} label="Selected work" title="Work that moves" />
+        <SectionHead
+          index={index}
+          label={heading?.label ?? "Selected work"}
+          title={heading?.title ?? "Work that moves"}
+        />
         <ul className="work__grid">
           {items.map((project, i) => (
             <li key={project.slug} className="work-card">

@@ -1,6 +1,6 @@
 # CONTENT.md
 
-Content rules, data model and how to add content. **No studio, team, client, project, testimonial or statistic content is invented.** Everything below marked **[TBD]** must be supplied by the team.
+Content rules, data model and how to add content. Site settings, homepage copy, services, team, projects and currently-building records can be edited in `/admin`; repository JSON remains their defaults and fallback. **No studio, team, client, project, testimonial or statistic content is invented.** Everything below marked **[TBD]** must be supplied by the team.
 
 ## 1. Content principles
 - Real, factual, specific. No generic filler, no fake reviews, no fake statistics, no fake clients, no fake expertise.
@@ -44,7 +44,7 @@ Hero media, overview, challenge, approach, image, full-bleed image, video, side-
 | Testimonial | Add file with permission confirmed |
 | Building item | Add file with current `updatedAt` |
 
-Run content validation and the build; fix any schema errors before publishing.
+Content can also be added or edited in `/admin` after the Supabase migration and admin role are configured; each save is validated server-side. File-based edits still require a build before deploy.
 
 ## 6. Update process and ownership
 - Content owner for each area **[TBD]**.

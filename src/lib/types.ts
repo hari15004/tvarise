@@ -4,12 +4,15 @@ export type SiteSettings = {
   placeholder?: boolean;
   name: string;
   tagline: string;
+  accentColor: string;
   heroTitle: string;
   heroSubtitle: string;
   contactEmail: string;
+  footerContactLabel: string;
   nav: NavItem[];
   cta: NavItem;
   social: NavItem[];
+  pages?: Record<"work" | "services" | "about" | "contact", { label: string; title: string; note: string }>;
 };
 
 export type CollectionItem = {
@@ -61,8 +64,20 @@ export type BuildingItem = CollectionItem & {
 
 export type HomeContent = {
   placeholder?: boolean;
+  sections?: Record<
+    "services" | "work" | "building" | "process" | "team",
+    { label: string; title: string }
+  >;
   about: { label: string; title: string; text: string };
   why: { title: string; text: string }[];
   process: { title: string; text: string }[];
-  cta: { title: string; text: string };
+  cta: { title: string; text: string; label?: string };
+};
+
+export type CmsCollection = "site" | "home" | "services" | "team" | "projects" | "building";
+
+export type CmsDocument = {
+  collection: CmsCollection;
+  slug: string;
+  content: Record<string, unknown>;
 };

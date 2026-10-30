@@ -76,7 +76,7 @@ html[data-motion="on"] .statement__w {
   inset: 0;
   background: radial-gradient(
     420px circle at var(--mx, 50%) var(--my, 0%),
-    rgba(232, 255, 89, 0.1),
+    color-mix(in srgb, var(--accent) 10%, transparent),
     transparent 60%
   );
   opacity: 0;
@@ -210,7 +210,7 @@ html[data-motion="on"] .statement__w {
 .work-card__img--empty {
   display: grid;
   place-items: center;
-  background: radial-gradient(120% 120% at 20% 10%, rgba(232, 255, 89, 0.18), transparent 55%),
+  background: radial-gradient(120% 120% at 20% 10%, color-mix(in srgb, var(--accent) 18%, transparent), transparent 55%),
     var(--surface);
 }
 .work-card__img--empty span {
@@ -417,7 +417,7 @@ html[data-motion="on"] .process__step:not(.is-active) .process__title {
   place-items: center;
   background: radial-gradient(
       140% 100% at var(--mx, 30%) var(--my, 20%),
-      rgba(232, 255, 89, 0.16),
+      color-mix(in srgb, var(--accent) 16%, transparent),
       transparent 60%
     ),
     var(--surface);

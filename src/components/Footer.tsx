@@ -32,7 +32,7 @@ export function Footer({ site }: { site: SiteSettings }) {
         </nav>
 
         <div>
-          <p className="footer__label">Contact</p>
+          <p className="footer__label">{site.footerContactLabel}</p>
           <a className="footer__link" href={`mailto:${site.contactEmail}`}>
             {site.contactEmail}
           </a>

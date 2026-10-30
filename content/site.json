@@ -2,9 +2,11 @@
   "placeholder": true,
   "name": "Tvarise",
   "tagline": "Building Bold Digital Experiences For Brands That Matter.",
+  "accentColor": "#e8ff59",
   "heroTitle": "Built fast. Made to rise.",
   "heroSubtitle": "",
   "contactEmail": "placeholder@example.com",
+  "footerContactLabel": "Contact",
   "nav": [
     {
       "label": "Work",
@@ -31,5 +33,27 @@
     "label": "Let's Work",
     "href": "/contact"
   },
-  "social": []
+  "social": [],
+  "pages": {
+    "work": {
+      "label": "Coming in a later step",
+      "title": "Work",
+      "note": "Selected work and the project index will live here."
+    },
+    "services": {
+      "label": "Coming in a later step",
+      "title": "Services",
+      "note": "The services overview will live here."
+    },
+    "about": {
+      "label": "Coming in a later step",
+      "title": "About",
+      "note": "The studio story and approach will live here."
+    },
+    "contact": {
+      "label": "Coming in a later step",
+      "title": "Contact",
+      "note": "The Let's Work enquiry flow will live here."
+    }
+  }
 }

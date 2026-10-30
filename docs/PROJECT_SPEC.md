@@ -40,7 +40,7 @@ Status: specification approved (2026-10-12). No code written yet.
 | `/privacy` | Privacy Policy |
 | `/404`, `/500` | Designed error pages |
 
-Not now: blog, shop, accounts/login, multilingual, site search, admin panel.
+Not now: blog, shop, multilingual, site search. Admin panel and login were added later; see `DECISIONS.md` D-021 and D-022.
 
 ## 4. Homepage journey
 

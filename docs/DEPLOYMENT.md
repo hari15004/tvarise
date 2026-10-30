@@ -13,6 +13,8 @@ Deployment plan. Nothing is configured yet. Hosting, domain, email service and c
 | Preview | Automatic per-branch previews for review (not indexed: noindex + no sitemap) |
 | Production | Live site on the real domain |
 
+Supabase-backed content editing requires the database migration and an admin account described in [`ADMIN.md`](./ADMIN.md).
+
 ## 3. Environment variables (names only; never commit values)
 Planned, to be confirmed at implementation:
 - Email service API key **[name TBD]**

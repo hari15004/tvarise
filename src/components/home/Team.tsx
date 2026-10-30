@@ -3,13 +3,25 @@ import type { TeamMember } from "@/lib/types";
 import { SectionHead } from "./SectionHead";
 
 // Only published members are passed in (see getTeam). A new member = a new content file.
-export function Team({ index, members }: { index: string; members: TeamMember[] }) {
+export function Team({
+  index,
+  members,
+  heading,
+}: {
+  index: string;
+  members: TeamMember[];
+  heading?: { label: string; title: string };
+}) {
   if (members.length === 0) return null;
 
   return (
     <section id="team" className="section" aria-label="Team">
       <div className="container">
-        <SectionHead index={index} label="Team" title="The people behind it" />
+        <SectionHead
+          index={index}
+          label={heading?.label ?? "Team"}
+          title={heading?.title ?? "The people behind it"}
+        />
         <ul className="team">
           {members.map((member, i) => (
             <li key={member.slug} className="team-card" data-spotlight>

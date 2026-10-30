@@ -15,13 +15,15 @@ import {
   getTeam,
 } from "@/lib/content";
 
-export default function Home() {
-  const site = getSite();
-  const home = getHome();
-  const services = getServices();
-  const projects = getFeaturedProjects();
-  const building = getBuildingItems();
-  const team = getTeam();
+export default async function Home() {
+  const [site, home, services, projects, building, team] = await Promise.all([
+    getSite(),
+    getHome(),
+    getServices(),
+    getFeaturedProjects(),
+    getBuildingItems(),
+    getTeam(),
+  ]);
 
   // Section numbers (001, 002, ...) skip sections that are hidden for lack of content.
   let n = 0;
@@ -46,11 +48,16 @@ export default function Home() {
         tags={services.map((s) => s.title)}
         placeholder={Boolean(site.placeholder)}
       />
-      <Services index={servicesIdx} items={services} />
-      <Work index={workIdx} items={projects} />
-      <Building index={buildingIdx} items={building} />
-      <Process index={processIdx} steps={home.process} placeholder={Boolean(home.placeholder)} />
-      <Team index={teamIdx} members={team} />
+      <Services index={servicesIdx} items={services} heading={home.sections?.services} />
+      <Work index={workIdx} items={projects} heading={home.sections?.work} />
+      <Building index={buildingIdx} items={building} heading={home.sections?.building} />
+      <Process
+        index={processIdx}
+        steps={home.process}
+        placeholder={Boolean(home.placeholder)}
+        heading={home.sections?.process}
+      />
+      <Team index={teamIdx} members={team} heading={home.sections?.team} />
       <About index={aboutIdx} content={home} />
       <FinalCta
         index={ctaIdx}
@@ -59,6 +66,7 @@ export default function Home() {
         ctaLabel={site.cta.label}
         ctaHref={site.cta.href}
         wordmark={site.name}
+        label={home.cta.label ?? "Let's work"}
       />
     </>
   );

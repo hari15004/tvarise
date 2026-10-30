@@ -10,13 +10,21 @@ export async function getMemberLive(slug: string): Promise<TeamMember | null> {
   cacheLife("minutes");
   cacheTag(`member-${slug}`);
 
-  const base = getMember(slug);
+  const base = await getMember(slug);
   if (!base) return null;
 
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  );
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  if (!url || !key) return base;
+
+  const supabase = createClient(url, key);
+  const { data: cmsContent, error: cmsError } = await supabase
+    .rpc("get_public_cms_content", { target_collection: "team" })
+    .eq("slug", slug)
+    .maybeSingle();
+  if (cmsError) throw new Error(`Could not load team content for "${slug}": ${cmsError.message}`);
+  if (cmsContent) return base;
+
   const { data } = await supabase
     .from("members")
     .select("*")

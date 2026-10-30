@@ -1,5 +1,12 @@
 {
   "placeholder": true,
+  "sections": {
+    "services": { "label": "Services", "title": "What we do" },
+    "work": { "label": "Selected work", "title": "Work that moves" },
+    "building": { "label": "Currently building", "title": "On the bench right now" },
+    "process": { "label": "How we work", "title": "From idea to launch" },
+    "team": { "label": "Team", "title": "The people behind it" }
+  },
   "about": {
     "label": "Who we are",
     "title": "The name says it.",
@@ -39,6 +46,7 @@
   ],
   "cta": {
     "title": "Let's build something that rises.",
-    "text": "Placeholder text. Tell us what you want to make."
+    "text": "Placeholder text. Tell us what you want to make.",
+    "label": "Let's work"
   }
 }

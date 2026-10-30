@@ -2,13 +2,25 @@ import type { CSSProperties } from "react";
 import type { Service } from "@/lib/types";
 import { SectionHead } from "./SectionHead";
 
-export function Services({ index, items }: { index: string; items: Service[] }) {
+export function Services({
+  index,
+  items,
+  heading,
+}: {
+  index: string;
+  items: Service[];
+  heading?: { label: string; title: string };
+}) {
   if (items.length === 0) return null;
 
   return (
     <section id="services" className="section" aria-label="Services">
       <div className="container">
-        <SectionHead index={index} label="Services" title="What we do" />
+        <SectionHead
+          index={index}
+          label={heading?.label ?? "Services"}
+          title={heading?.title ?? "What we do"}
+        />
         <ul className="svc">
           {items.map((service, i) => (
             <li

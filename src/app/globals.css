@@ -2,8 +2,7 @@
    Design tokens (single source of truth: change values here, not in components)
    ========================================================================== */
 :root {
-  /* Color. NOTE: --accent is a PLACEHOLDER, final brand color is not decided.
-     The 3D Sculpture reads this value too. */
+  /* The accent is overridden from site settings; this is the fallback value. */
   --bg: #0a0a0b;
   --surface: #111114;
   --ink: #f4f4f1;

@@ -151,3 +151,10 @@ Format: DATE / DECISION / WHY / ALTERNATIVES CONSIDERED / CONSEQUENCES
 - **Why:** The team wants to edit page text without changing code.
 - **Alternatives:** Edit JSON in Git only.
 - **Consequences:** Supersedes D-011 for login and database. Site-wide editing by one admin is planned next, not built yet. Env var names only: NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY.
+
+## D-022 Supabase-backed site content admin
+- **Date:** 2026-10-30
+- **Decision:** Add `/admin` for accounts with `profiles.role = 'admin'`. It edits site settings, homepage content, services, projects, team, and currently-building records as validated JSON. Supabase `cms_content` overrides the repository's JSON defaults; a migration provides public reads and admin-only writes enforced by RLS.
+- **Why:** The owner needs to update placeholder copy and site content without editing code or redeploying, while preserving the existing file-based defaults and authenticated member-page editing.
+- **Alternatives:** Continue editing JSON through Git; adopt a hosted third-party CMS.
+- **Consequences:** Apply `supabase/migrations/20261030_admin_content.sql` and promote an existing Supabase Auth account before `/admin` can save content. Arbitrary component/layout/style changes and media uploads are outside the content model.

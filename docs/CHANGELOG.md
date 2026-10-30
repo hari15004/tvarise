@@ -4,6 +4,12 @@ Meaningful changes only. Format: DATE / VERSION / CHANGE / FILES AFFECTED / REAS
 
 ---
 
+## 2026-10-30 / v0.4.0
+- **Change:** Added a protected `/admin` JSON content manager for global site settings, homepage copy, services, projects, team, and currently-building items. Supabase content overrides are merged with the repository JSON defaults and protected by RLS.
+- **Files affected:** `src/app/admin/`, `src/lib/content.ts`, affected App Router pages, `supabase/migrations/20261030_admin_content.sql`, admin/security/decision docs.
+- **Reason:** Let admins maintain placeholder and live site content without source edits.
+- **Test status:** `npx tsc --noEmit`, `git diff --check`, and `npm run build` passed using the repository JSON fallback. Applied both migrations to the connected Supabase project; confirmed `cms_content` RLS, published-content RPC, and an existing admin profile.
+
 ## 2026-10-12 / v0.0.1 (planning)
 - **Change:** Specification approved and documentation set created. No code written.
 - **Files affected:** `docs/PROJECT_SPEC.md`, `docs/AI_HANDOFF.md`, `docs/PROGRESS.md`, `docs/DECISIONS.md`, `docs/CHANGELOG.md`, `docs/ARCHITECTURE.md`, `docs/SEO.md`, `docs/SECURITY.md`, `docs/CONTENT.md`, `docs/TESTING.md`, `docs/DEPLOYMENT.md`

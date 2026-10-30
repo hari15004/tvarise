@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import type { CSSProperties } from "react";
 import { Inter, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import "./home.css";
@@ -22,8 +23,8 @@ const body = Inter({
   display: "swap",
 });
 
-export function generateMetadata(): Metadata {
-  const site = getSite();
+export async function generateMetadata(): Promise<Metadata> {
+  const site = await getSite();
   return {
     title: { default: site.name, template: `%s | ${site.name}` },
     description: site.tagline,
@@ -45,13 +46,18 @@ export const viewport: Viewport = {
 // after 5s, everything is shown normally.
 const bootScript = `(function(){try{var d=document.documentElement;if(matchMedia('(prefers-reduced-motion: reduce)').matches){d.dataset.motion='off';return}d.dataset.motion='on';if(!localStorage.getItem('studio-intro-seen')){d.dataset.intro='on'}setTimeout(function(){if(!d.dataset.ready){d.dataset.motion='off';delete d.dataset.intro}},5000)}catch(e){}})();`;
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
-  const site = getSite();
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const [site, team] = await Promise.all([getSite(), getTeam()]);
   // One Sculpture piece per published team member (data-driven).
-  const pieces = getTeam().map((member) => ({ id: member.pieceId }));
+  const pieces = team.map((member) => ({ id: member.pieceId }));
 
   return (
-    <html lang="en" className={`${display.variable} ${body.variable}`} suppressHydrationWarning>
+    <html
+      lang="en"
+      className={`${display.variable} ${body.variable}`}
+      style={{ "--accent": site.accentColor } as CSSProperties}
+      suppressHydrationWarning
+    >
       <head>
         <script dangerouslySetInnerHTML={{ __html: bootScript }} />
       </head>

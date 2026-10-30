@@ -2,13 +2,25 @@ import type { BuildingItem } from "@/lib/types";
 import { SectionHead } from "./SectionHead";
 
 // Renders nothing when /content/building is empty, so it never looks stale.
-export function Building({ index, items }: { index: string; items: BuildingItem[] }) {
+export function Building({
+  index,
+  items,
+  heading,
+}: {
+  index: string;
+  items: BuildingItem[];
+  heading?: { label: string; title: string };
+}) {
   if (items.length === 0) return null;
 
   return (
     <section id="building" className="section section--quiet" aria-label="Currently building">
       <div className="container">
-        <SectionHead index={index} label="Currently building" title="On the bench right now" />
+        <SectionHead
+          index={index}
+          label={heading?.label ?? "Currently building"}
+          title={heading?.title ?? "On the bench right now"}
+        />
         <ul className="building">
           {items.map((item) => (
             <li key={item.slug} className="building__item" data-reveal>

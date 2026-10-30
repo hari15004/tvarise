@@ -2,13 +2,27 @@ import { SectionHead } from "./SectionHead";
 
 type Step = { title: string; text: string };
 
-export function Process({ index, steps, placeholder }: { index: string; steps: Step[]; placeholder: boolean }) {
+export function Process({
+  index,
+  steps,
+  placeholder,
+  heading,
+}: {
+  index: string;
+  steps: Step[];
+  placeholder: boolean;
+  heading?: { label: string; title: string };
+}) {
   if (steps.length === 0) return null;
 
   return (
     <section id="process" className="section" aria-label="How we work">
       <div className="container">
-        <SectionHead index={index} label="How we work" title="From idea to launch" />
+        <SectionHead
+          index={index}
+          label={heading?.label ?? "How we work"}
+          title={heading?.title ?? "From idea to launch"}
+        />
         <div className="process" data-process>
           <div className="process__line" aria-hidden="true">
             <span data-line-fill />
