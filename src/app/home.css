@@ -12,7 +12,7 @@ html[data-motion="on"] .statement__w {
 
 /* ---- Shared section layout ---- */
 .section {
-  padding-block: clamp(5rem, 12vw, 10rem);
+  padding-block: clamp(4rem, 8vw, 7rem);
 }
 .section--quiet {
   border-top: 1px solid var(--line);
@@ -35,13 +35,13 @@ html[data-motion="on"] .statement__w {
 .section__more {
   display: flex;
   justify-content: center;
-  margin-top: var(--space-6);
+  margin-top: var(--space-5);
 }
 .sec-head {
   display: grid;
   gap: var(--space-3);
   max-width: 60ch;
-  margin-bottom: var(--space-6);
+  margin-bottom: var(--space-5);
 }
 .sec-label {
   display: flex;
@@ -142,13 +142,13 @@ html[data-motion="on"] .statement__w {
 .svc__card {
   position: sticky;
   top: calc(5.5rem + var(--i) * 1.1rem);
-  margin-bottom: clamp(1rem, 3vw, 2rem);
+  margin-bottom: clamp(0.75rem, 2vw, 1.25rem);
 }
 .svc__inner {
   display: flex;
   flex-direction: column;
   gap: 0.9rem;
-  min-height: clamp(280px, 52vh, 460px);
+  min-height: clamp(260px, 44vh, 390px);
   padding: clamp(1.25rem, 3.5vw, 2.5rem);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 22px;
@@ -435,7 +435,7 @@ body[data-site-edit-mode="true"] .building__add-project {
 }
 .process__list {
   display: grid;
-  gap: var(--space-6);
+  gap: var(--space-5);
 }
 .process__step {
   display: grid;
@@ -565,7 +565,7 @@ body[data-site-edit-mode="true"] .team__add-person {
 /* ---- About ---- */
 .statement {
   max-width: 24ch;
-  margin-bottom: var(--space-6);
+  margin-bottom: var(--space-5);
   font-family: var(--font-head);
   font-size: var(--step-3);
   font-weight: 700;
@@ -607,9 +607,9 @@ body[data-site-edit-mode="true"] .team__add-person {
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  min-height: 100vh;
-  min-height: 100svh;
-  padding-top: var(--space-7);
+  min-height: 82vh;
+  min-height: 82svh;
+  padding-top: var(--space-6);
   overflow: clip;
   border-top: 1px solid var(--line);
 }
@@ -619,7 +619,7 @@ body[data-site-edit-mode="true"] .team__add-person {
   display: grid;
   gap: var(--space-4);
   justify-items: start;
-  padding-bottom: var(--space-5);
+  padding-bottom: var(--space-4);
 }
 .cta__title {
   max-width: 14ch;

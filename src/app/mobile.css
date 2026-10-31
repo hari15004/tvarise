@@ -64,16 +64,16 @@ button {
     --gutter: clamp(1rem, 5vw, 1.4rem);
   }
   .section {
-    padding-block: clamp(3.75rem, 14vw, 5.5rem);
+    padding-block: clamp(3rem, 10vw, 4rem);
   }
   .grain {
     display: none;
   }
   .sec-head {
-    margin-bottom: var(--space-5);
+    margin-bottom: var(--space-4);
   }
   .section__more {
-    margin-top: var(--space-5);
+    margin-top: var(--space-4);
   }
 
   /* Hero: keep tagline and title from colliding */
@@ -97,7 +97,7 @@ button {
 
   /* Services: shorter sticky cards */
   .svc__inner {
-    min-height: clamp(250px, 48svh, 380px);
+    min-height: clamp(230px, 42svh, 340px);
     border-radius: 16px;
   }
   .svc__title {
@@ -109,7 +109,7 @@ button {
     font-size: var(--step-2);
   }
   .process__list {
-    gap: var(--space-5);
+    gap: var(--space-4);
   }
   .team {
     gap: var(--space-3);
@@ -218,7 +218,7 @@ button {
 /* Buttons higher up, less empty space under the horse */
 @media (max-width: 640px) {
   .hero__inner {
-    padding-bottom: calc(var(--space-5) + 6rem);
+    padding-bottom: calc(var(--space-4) + 2.5rem + env(safe-area-inset-bottom));
   }
 }
 
@@ -322,7 +322,7 @@ button {
     background: rgba(255, 255, 255, 0.035);
   }
   .hero__inner {
-    padding-bottom: calc(var(--space-5) + 6rem + env(safe-area-inset-bottom));
+    padding-bottom: calc(var(--space-4) + 2.5rem + env(safe-area-inset-bottom));
   }
   .hero__actions .btn {
     min-height: 54px;

@@ -505,8 +505,8 @@ html[data-intro="on"] .intro__name-inner {
    ========================================================================== */
 .hero {
   position: relative;
-  height: 220vh;
-  height: 220svh;
+  height: 180vh;
+  height: 180svh;
 }
 .hero__sticky {
   position: sticky;
@@ -619,6 +619,10 @@ html[data-intro="on"] .intro__name-inner {
   }
 }
 @media (max-width: 640px) {
+  .hero {
+    height: 160vh;
+    height: 160svh;
+  }
   .hero__cue {
     display: none;
   }
@@ -676,8 +680,8 @@ html[data-cursor="on"] .cursor {
    Page stub (temporary pages)
    ========================================================================== */
 .page-stub {
-  padding-block: var(--space-7);
-  min-height: 60svh;
+  padding-block: var(--space-6);
+  min-height: 45svh;
 }
 .page-stub .container {
   display: grid;
@@ -696,8 +700,8 @@ html[data-cursor="on"] .cursor {
    Footer
    ========================================================================== */
 .footer {
-  margin-top: var(--space-7);
-  padding-top: var(--space-6);
+  margin-top: var(--space-6);
+  padding-top: var(--space-5);
   border-top: 1px solid var(--line);
   background: var(--bg);
 }
