@@ -164,9 +164,29 @@ export async function getProjects(): Promise<Project[]> {
 }
 
 export async function getFeaturedProjects(): Promise<Project[]> {
-  return (await getProjects()).filter(
+  const [projects, team] = await Promise.all([getProjects(), getTeam()]);
+  const profileWork: Project[] = team.flatMap((member) =>
+    (member.work ?? []).flatMap((work, index) => {
+      const cover = work.image?.trim();
+      if (!work.title.trim() || !cover) return [];
+
+      return [{
+        slug: `profile-${member.slug}-${index + 1}`,
+        order: index,
+        title: work.title,
+        year: null,
+        services: [],
+        team: [member.slug],
+        cover,
+        summary: work.summary,
+        featured: true,
+      }];
+    })
+  );
+  const featuredProjects = projects.filter(
     (project) => project.featured && !project.placeholder && !project.inProgress
   );
+  return [...profileWork, ...featuredProjects];
 }
 
 export async function getBuildingItems(): Promise<BuildingItem[]> {

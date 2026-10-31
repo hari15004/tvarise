@@ -255,9 +255,9 @@ button {
     gap: var(--space-4);
   }
   .member__photo {
-    width: 100%;
+    width: min(100%, 300px);
     max-width: none;
-    aspect-ratio: 4 / 3;
+    aspect-ratio: 4 / 5;
   }
   .member__work {
     grid-template-columns: minmax(0, 1fr);
