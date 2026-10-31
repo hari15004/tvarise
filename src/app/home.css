@@ -519,6 +519,13 @@ body[data-site-edit-mode="true"] .team__add-person {
   border-radius: var(--radius-m);
   background: var(--surface);
 }
+@media (min-width: 860px) {
+  .team-card__media {
+    width: min(100%, 240px);
+    aspect-ratio: 4 / 5;
+    justify-self: center;
+  }
+}
 .team-card__img {
   position: absolute;
   inset: -10% 0;
