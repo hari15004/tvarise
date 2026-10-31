@@ -180,6 +180,7 @@ export async function getFeaturedProjects(): Promise<Project[]> {
         cover,
         summary: work.summary,
         featured: true,
+        link: work.link,
       }];
     })
   );

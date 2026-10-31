@@ -58,6 +58,7 @@ export type Project = CollectionItem & {
   cover: string | null;
   summary: string;
   featured: boolean;
+  link?: string;
   inProgress?: boolean;
   clientName?: string;
 };

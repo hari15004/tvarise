@@ -25,16 +25,16 @@ export function Work({
           title={heading?.title ?? "Work that moves"}
         />
         <ul className="work__grid">
-          {visibleItems.map((project, i) => (
-            <li key={project.slug} className="work-card">
-              {/* Detail pages come later; for now every card opens the work index. */}
-              <Link href="/work" className="work-card__link" data-cursor>
+          {visibleItems.map((project, i) => {
+            const isProfileWork = project.slug.startsWith("profile-");
+            const content = (
+              <>
                 <div
                   className="work-card__media"
                   data-clip
-                  data-edit-collection="projects"
-                  data-edit-slug={project.slug}
-                  data-edit-field="cover"
+                  data-edit-collection={isProfileWork ? undefined : "projects"}
+                  data-edit-slug={isProfileWork ? undefined : project.slug}
+                  data-edit-field={isProfileWork ? undefined : "cover"}
                 >
                   {project.cover ? (
                     // eslint-disable-next-line @next/next/no-img-element
@@ -49,9 +49,29 @@ export function Work({
                   <h3 className="work-card__title">{project.title}</h3>
                   <p className="work-card__text">{project.summary}</p>
                 </div>
-              </Link>
-            </li>
-          ))}
+              </>
+            );
+
+            return (
+              <li key={project.slug} className="work-card">
+                {project.link ? (
+                  <a
+                    href={project.link}
+                    className="work-card__link"
+                    data-cursor
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {content}
+                  </a>
+                ) : (
+                  <Link href="/work" className="work-card__link" data-cursor>
+                    {content}
+                  </Link>
+                )}
+              </li>
+            );
+          })}
         </ul>
         <div className="work__actions" data-reveal>
           {showMore && items.length > visibleItems.length && (

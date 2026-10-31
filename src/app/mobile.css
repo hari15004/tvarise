@@ -64,16 +64,16 @@ button {
     --gutter: clamp(1rem, 5vw, 1.4rem);
   }
   .section {
-    padding-block: clamp(3rem, 10vw, 4rem);
+    padding-block: clamp(2.5rem, 8vw, 3.25rem);
   }
   .grain {
     display: none;
   }
   .sec-head {
-    margin-bottom: var(--space-4);
+    margin-bottom: var(--space-3);
   }
   .section__more {
-    margin-top: var(--space-4);
+    margin-top: var(--space-3);
   }
 
   /* Hero: keep tagline and title from colliding */
@@ -109,20 +109,17 @@ button {
     font-size: var(--step-2);
   }
   .process__list {
-    gap: var(--space-4);
+    gap: var(--space-3);
   }
   .team {
-    gap: var(--space-3);
+    gap: var(--space-2);
   }
   .team-card__name {
     font-size: var(--step-0);
   }
   .work__grid {
     grid-template-columns: minmax(0, 1fr);
-    gap: var(--space-4);
-  }
-  .work-card__media {
-    aspect-ratio: 16 / 10;
+    gap: var(--space-3);
   }
   .work-card__title {
     font-size: var(--step-1);
@@ -222,13 +219,6 @@ button {
   }
 }
 
-/* Whole team card is tappable (the name link stretches over the card) */
-.team-card__link::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-}
 .team-card__link:hover {
   color: var(--accent);
 }

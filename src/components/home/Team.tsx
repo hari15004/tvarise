@@ -26,14 +26,20 @@ export function Team({
           {members.map((member, i) => (
             <li key={member.slug} className="team-card" data-spotlight>
               <div className="team-card__media" data-clip>
-                {member.portrait ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img className="team-card__img" src={member.portrait} alt={member.name} data-parallax />
-                ) : (
-                  <div className="team-card__img team-card__img--empty" data-parallax>
-                    <span>{String(i + 1).padStart(2, "0")}</span>
-                  </div>
-                )}
+                <Link
+                  href={`/team/${member.slug}`}
+                  className="team-card__photo-link"
+                  aria-label={`View ${member.name}'s profile`}
+                >
+                  {member.portrait ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img className="team-card__img" src={member.portrait} alt="" data-parallax />
+                  ) : (
+                    <div className="team-card__img team-card__img--empty" data-parallax>
+                      <span>{String(i + 1).padStart(2, "0")}</span>
+                    </div>
+                  )}
+                </Link>
               </div>
               <div className="team-card__body" data-reveal>
                 <h3 className="team-card__name">
