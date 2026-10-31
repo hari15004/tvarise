@@ -27,8 +27,15 @@ export async function saveMember(
   if (!auth.user) return { ok: false, error: "Login karo pehle." };
 
   const safeUrl = (u: string) => {
-    const t = (u || "").trim().slice(0, 300);
-    return /^https?:\/\//i.test(t) ? t : "";
+    const value = (u || "").trim().slice(0, 300);
+    if (!value) return "";
+
+    try {
+      const url = new URL(/^[a-z][a-z\d+.-]*:/i.test(value) ? value : `https://${value}`);
+      return url.protocol === "http:" || url.protocol === "https:" ? url.toString() : "";
+    } catch {
+      return "";
+    }
   };
 
   const clean: Record<string, unknown> = {

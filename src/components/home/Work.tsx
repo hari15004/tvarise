@@ -59,8 +59,6 @@ export function Work({
                     href={project.link}
                     className="work-card__link"
                     data-cursor
-                    target="_blank"
-                    rel="noopener noreferrer"
                   >
                     {content}
                   </a>
