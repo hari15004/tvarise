@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidateTag } from "next/cache";
+import { updateTag } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 
 type Link = { label: string; href: string };
@@ -77,7 +77,7 @@ export async function saveMember(
   if (error) return { ok: false, error: "Save nahi hua." };
   if (!data || data.length === 0) return { ok: false, error: "Tumhe ye page edit karne ki permission nahi hai." };
 
-  revalidateTag(`member-${slug}`, "max");
-  revalidateTag("cms-team", "max");
+  updateTag(`member-${slug}`);
+  updateTag("cms-team");
   return { ok: true, error: "" };
 }
