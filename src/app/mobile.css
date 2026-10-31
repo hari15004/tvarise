@@ -235,15 +235,21 @@ button {
 
 @media (max-width: 420px) {
   .team {
-    grid-template-columns: minmax(0, 1fr);
-    gap: var(--space-4);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-3);
   }
   .team-card__media {
-    aspect-ratio: 16 / 10;
+    aspect-ratio: 3 / 4;
   }
   .team-card__img {
-    inset: -8% 0;
-    height: 116%;
+    inset: -6% 0;
+    height: 112%;
+  }
+  .team-card__name {
+    font-size: clamp(0.9rem, 4vw, 1rem);
+  }
+  .team-card__role {
+    font-size: 0.75rem;
   }
   .member__top {
     gap: var(--space-4);
