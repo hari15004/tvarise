@@ -338,7 +338,7 @@ export function createSculpture({ canvas, tier, onSlow, onContextLost }: Options
   const layout = () => {
     const w = canvas.clientWidth || window.innerWidth;
     const h = canvas.clientHeight || window.innerHeight;
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, tier === "full" ? 1.75 : 1));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, tier === "full" ? 1.75 : 1.5));
     renderer.setSize(w, h, false);
     camera.aspect = w / h;
     camera.updateProjectionMatrix();
@@ -346,9 +346,9 @@ export function createSculpture({ canvas, tier, onSlow, onContextLost }: Options
     uniforms.uResolution.value.copy(size);
     wide = camera.aspect > 1.1;
     const halfW = 6 * Math.tan((25 * Math.PI) / 180) * camera.aspect;
-    baseX = wide ? Math.min(2.5, halfW * 0.5) : 0.6;
-    baseY = wide ? 0 : 0.6;
-    baseScale = wide ? Math.min(0.8, camera.aspect * 0.45) : 0.3;
+    baseX = wide ? Math.min(2.5, halfW * 0.5) : Math.min(0.9, halfW * 0.68);
+    baseY = wide ? 0 : 0.15;
+    baseScale = wide ? Math.min(0.8, camera.aspect * 0.45) : 0.34;
   };
   layout();
   window.addEventListener("resize", layout);

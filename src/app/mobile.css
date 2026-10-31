@@ -321,4 +321,9 @@ button {
   .hero__actions .btn {
     min-height: 54px;
   }
+  .hero__tagline {
+    max-width: min(46vw, 11rem);
+    font-size: clamp(0.98rem, 4.1vw, 1.18rem);
+    line-height: 1.28;
+  }
 }
