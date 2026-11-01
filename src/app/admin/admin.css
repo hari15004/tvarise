@@ -19,6 +19,25 @@
 .admin__header {
   margin-bottom: 2rem;
 }
+.admin__header-links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 0.6rem;
+}
+.admin__logout-wrap {
+  display: grid;
+  justify-items: end;
+  gap: 0.35rem;
+}
+.admin__logout-wrap button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+.admin__logout-error {
+  color: #ff9a9a;
+  font-size: 0.75rem;
+}
 .admin__header h1 {
   font-size: clamp(2.4rem, 6vw, 4.8rem);
 }

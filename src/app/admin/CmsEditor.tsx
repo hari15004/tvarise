@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useMemo, useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { deleteContentDocument, saveContentDocument } from "./actions";
+import { LogoutButton } from "./LogoutButton";
 import type { CmsCollection, CmsDocument } from "@/lib/types";
 import { createClient } from "@/lib/supabase/client";
 
@@ -555,7 +556,11 @@ export default function CmsEditor({ initialDocuments }: { initialDocuments: CmsD
             Website ka text, menu, logo aur photos yahan se badlein. Har change ke baad “Save changes” dabana na bhoolein.
           </p>
         </div>
-        <Link className="admin__back" href="/">Website dekhein ↗</Link>
+        <div className="admin__header-links">
+          <Link className="admin__back" href="/admin/inquiries">Enquiries</Link>
+          <Link className="admin__back" href="/">Website dekhein ↗</Link>
+          <LogoutButton />
+        </div>
       </header>
 
       <div className="admin__layout">

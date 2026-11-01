@@ -1,44 +1,76 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { useState, useTransition, type FormEvent } from "react";
+import { submitContactInquiry } from "./actions";
 
-export function ContactForm({ email }: { email: string }) {
+export function ContactForm() {
   const [message, setMessage] = useState("");
+  const [sent, setSent] = useState(false);
+  const [pending, startTransition] = useTransition();
 
   function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!email) {
-      setMessage("Contact email configure nahi hai. Website admin se contact karein.");
-      return;
-    }
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+    setMessage("");
+    setSent(false);
+    const animationDelay = new Promise((resolve) => window.setTimeout(resolve, 650));
 
-    const formData = new FormData(event.currentTarget);
-    const name = String(formData.get("name") ?? "").trim();
-    const sender = String(formData.get("email") ?? "").trim();
-    const project = String(formData.get("project") ?? "").trim();
-    const subject = encodeURIComponent(`Project enquiry from ${name}`);
-    const body = encodeURIComponent(`Name: ${name}\nEmail: ${sender}\n\nProject details:\n${project}`);
-    window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
+    startTransition(async () => {
+      const [result] = await Promise.all([submitContactInquiry(formData), animationDelay]);
+      setMessage(result.message);
+      if (result.ok) {
+        setSent(true);
+        form.reset();
+      }
+    });
   }
 
   return (
-    <form className="contact-form" onSubmit={submit}>
-      <h2>Project enquiry</h2>
+    <form
+      className="contact-form"
+      onSubmit={submit}
+      onChange={() => {
+        if (sent) {
+          setSent(false);
+          setMessage("");
+        }
+      }}
+    >
+      <p className="contact-form__eyebrow">CONTACT</p>
+      <h1>Tell us what you have in mind.</h1>
       <label>
         <span>Your name</span>
         <input name="name" autoComplete="name" required maxLength={100} />
       </label>
       <label>
-        <span>Email address</span>
-        <input name="email" type="email" autoComplete="email" required maxLength={160} />
+        <span>Mobile number</span>
+        <input name="phone" type="tel" autoComplete="tel" required minLength={7} maxLength={30} />
       </label>
       <label>
-        <span>What are you looking to build?</span>
-        <textarea name="project" rows={6} required maxLength={3000} />
+        <span>Email address</span>
+        <input name="email" type="email" autoComplete="email" required maxLength={254} />
       </label>
-      {message && <p className="contact-form__message" role="alert">{message}</p>}
-      <button type="submit" className="btn btn--primary">Prepare email ↗</button>
-      <p className="contact-form__hint">This opens your email app with your enquiry ready to send.</p>
+      <label>
+        <span>What would you like us to do?</span>
+        <textarea name="request" rows={4} required maxLength={3000} />
+      </label>
+      {message && (
+        <p className={`contact-form__message${sent ? " is-success" : ""}`} role="status">
+          {message}
+        </p>
+      )}
+      <button
+        type="submit"
+        className={`btn btn--primary contact-form__send${pending ? " is-sending" : ""}${sent ? " is-sent" : ""}`}
+        disabled={pending}
+      >
+        <span className="contact-form__envelope" aria-hidden="true">
+          <span className="contact-form__paper" />
+          <span className="contact-form__flap" />
+        </span>
+        <span>{pending ? "Sending…" : sent ? "Sent" : "Send message"}</span>
+      </button>
     </form>
   );
 }

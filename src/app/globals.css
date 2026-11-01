@@ -811,6 +811,10 @@ body[data-site-edit-mode="true"] .footer__edit-social {
   gap: var(--space-6);
   align-items: start;
 }
+.contact-page > .container {
+  display: grid;
+  justify-items: center;
+}
 .contact-page__details,
 .contact-form {
   display: grid;
@@ -853,10 +857,20 @@ body[data-site-edit-mode="true"] .footer__edit-social {
   gap: var(--space-3);
 }
 .contact-form {
+  width: min(100%, 620px);
   padding: clamp(1.25rem, 3vw, 2rem);
   border: 1px solid var(--line);
   border-radius: var(--radius-m);
   background: var(--surface);
+}
+.contact-form__eyebrow {
+  color: var(--accent);
+  font-size: var(--step--1);
+  letter-spacing: 0.14em;
+}
+.contact-form h1 {
+  margin-bottom: var(--space-2);
+  font-size: clamp(2rem, 5vw, 3.2rem);
 }
 .contact-form label {
   display: grid;
@@ -876,8 +890,51 @@ body[data-site-edit-mode="true"] .footer__edit-social {
 .contact-form textarea {
   resize: vertical;
 }
-.contact-form__hint {
-  font-size: var(--step--1);
+.contact-form__send {
+  justify-self: start;
+  min-width: 190px;
+}
+.contact-form__send:disabled {
+  cursor: default;
+}
+.contact-form__envelope {
+  position: relative;
+  display: inline-block;
+  width: 26px;
+  height: 19px;
+  overflow: hidden;
+  border: 1.5px solid currentColor;
+  border-radius: 3px;
+}
+.contact-form__paper {
+  position: absolute;
+  left: 5px;
+  top: 2px;
+  width: 14px;
+  height: 12px;
+  border-radius: 1px;
+  background: currentColor;
+  transition: transform 0.35s var(--ease-out), opacity 0.25s ease;
+}
+.contact-form__flap {
+  position: absolute;
+  inset: -1px 0 auto;
+  height: 12px;
+  background: var(--accent);
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  transform-origin: top;
+  transition: transform 0.35s var(--ease-out);
+}
+.contact-form__send.is-sending .contact-form__paper {
+  transform: translateY(12px);
+  opacity: 0;
+}
+.contact-form__send.is-sending .contact-form__flap,
+.contact-form__send.is-sent .contact-form__flap {
+  transform: rotateX(180deg);
+}
+.contact-form__message.is-success {
+  color: var(--accent);
 }
 @media (min-width: 860px) {
   .contact-page__grid {

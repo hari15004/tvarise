@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useRef } from "react";
 import { ScrollTrigger } from "@/motion/gsap";
 import { getTier, stageInput } from "@/motion/state";
+import { AdminInquiryBell } from "./AdminInquiryBell";
 
 type Props = {
   index: string;
@@ -51,10 +52,11 @@ export function FinalCta({ index, title, text, ctaLabel, ctaHref, wordmark, labe
         <p className="cta__text" data-reveal>
           {text}
         </p>
-        <div data-reveal>
+        <div className="cta__actions" data-reveal>
           <Link href={ctaHref} className="btn btn--primary btn--lg" data-magnetic>
             {ctaLabel}
           </Link>
+          <AdminInquiryBell />
         </div>
       </div>
       <p className="cta__wordmark" aria-hidden="true">

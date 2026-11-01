@@ -513,7 +513,9 @@ body[data-site-edit-mode="true"] .team__add-person {
 }
 .team-card__media {
   position: relative;
-  aspect-ratio: 3 / 4;
+  width: min(100%, 210px);
+  justify-self: center;
+  aspect-ratio: 4 / 5;
   overflow: hidden;
   border: 1px solid var(--line);
   border-radius: var(--radius-m);
@@ -525,13 +527,6 @@ body[data-site-edit-mode="true"] .team__add-person {
   display: block;
   overflow: hidden;
   border-radius: inherit;
-}
-@media (min-width: 860px) {
-  .team-card__media {
-    width: min(100%, 210px);
-    aspect-ratio: 4 / 5;
-    justify-self: center;
-  }
 }
 .team-card__img {
   position: absolute;
@@ -563,7 +558,9 @@ body[data-site-edit-mode="true"] .team__add-person {
 }
 .team-card__body {
   display: grid;
+  width: min(100%, 210px);
   gap: 0.25rem;
+  justify-self: center;
   justify-items: start;
 }
 .team-card__name {
@@ -634,6 +631,51 @@ body[data-site-edit-mode="true"] .team__add-person {
   gap: var(--space-4);
   justify-items: start;
   padding-bottom: var(--space-4);
+}
+.cta__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+.cta__inquiry-bell {
+  position: relative;
+  display: grid;
+  width: 52px;
+  height: 52px;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.06);
+  transition: border-color var(--dur-fast) var(--ease-out), background var(--dur-fast) var(--ease-out);
+}
+.cta__inquiry-bell:hover {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
+}
+.cta__inquiry-bell svg {
+  width: 22px;
+  height: 22px;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.7;
+}
+.cta__inquiry-count {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  display: grid;
+  min-width: 20px;
+  height: 20px;
+  padding-inline: 4px;
+  place-items: center;
+  border: 2px solid var(--bg);
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-size: 0.68rem;
+  font-weight: 700;
+  line-height: 1;
 }
 .cta__title {
   max-width: 14ch;
