@@ -158,3 +158,10 @@ Format: DATE / DECISION / WHY / ALTERNATIVES CONSIDERED / CONSEQUENCES
 - **Why:** The owner needs to update placeholder copy and site content without editing code or redeploying, while preserving the existing file-based defaults and authenticated member-page editing.
 - **Alternatives:** Continue editing JSON through Git; adopt a hosted third-party CMS.
 - **Consequences:** Apply `supabase/migrations/20261030_admin_content.sql` and promote an existing Supabase Auth account before `/admin` can save content. Arbitrary component/layout/style changes and media uploads are outside the content model.
+
+## D-023 New visual reference is the final design authority
+- **Date:** 2026-11-26
+- **Decision:** The owner has explicitly superseded D-002 for the current redesign. The newly supplied Tvarise reference image (dark cinematic creative-studio homepage with gold horse/brand accents, purple highlights, sculptural 3D hero, compact service/work panels, about/team/contact band and footer) is the primary authority for homepage composition, section hierarchy, proportions, visual language and interaction direction. Recreate and polish it in the existing Tvarise codebase rather than treating it as loose inspiration.
+- **Why:** The owner wants the implementation to match this specific visual reference, correcting its visible mistakes while retaining its distinctive identity.
+- **Alternatives:** Keep the previous original layout and use the image only as inspiration (D-002).
+- **Consequences:** D-002 is superseded for the current visual redesign. Preserve existing routes, content-driven architecture, accessibility, responsive behavior, motion tiers and working functionality unless a separately approved change is necessary. Do not invent team identities, project work, logos or other factual brand assets; identify missing assets/content. The reference image itself contains apparent placeholder team labels and duplicate names, which must not be copied as real content. Any structural changes must be implemented incrementally and verified with a production build.
