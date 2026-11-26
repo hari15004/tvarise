@@ -137,3 +137,12 @@ Tune visual style from owner screenshots of the reference; Sculpture separation 
 - Build passes (npm run build).
 ## UPDATE 2026-10-26
 - /team is now the list page and /team/[slug] has the Suspense EditGate. Next.js is 16.4.3. tsbuildinfo and .vercel are untracked and ignored. The Google Form script was moved out of public/. Next planned: single-admin /admin panel.
+
+## UPDATE 2026-11-26 — owner-approved reference redesign
+- Owner explicitly confirmed that the newly supplied Tvarise reference image is the final design authority. This supersedes D-002 for the current visual redesign; see D-023 in `docs/DECISIONS.md`.
+- Work is isolated on branch `design/reference-authority`; do not commit this redesign directly to `main`.
+- The reference's target composition: dark cinematic full-width hero with large serif headline and sculptural focal object; compact services and selected-work panels; lower about, team and contact band; restrained footer. Gold horse/brand accents and selective purple highlights. Correct visible errors rather than copying placeholder names or inventing team/project facts.
+- Preserve Next.js App Router, TypeScript, content-driven JSON/Supabase architecture, routes, Three.js/GSAP/Lenis motion foundations, motion tiers, accessibility and responsive behavior. Do not add dependencies without need.
+- Inspection at start of this task confirmed `src/app/page.tsx` currently renders Hero plus data-driven sections in `home.sectionOrder` (default includes services, work, process, team, building, about, CTA). Existing source still contains Building and Process, which are not visible in the supplied reference; inspect content visibility and route/spec implications before deciding how to handle them. Do not silently delete working functionality.
+- Current repo docs contain older/outdated status entries. Verify current source and build before changing progress checkboxes or claiming tests pass.
+- Next: inspect `PROJECT_SPEC.md`, navbar/footer and each homepage section/component CSS, relevant content JSON and public assets; compare against the supplied reference; prepare a concise file-by-file implementation plan. Then make targeted edits, test mobile/desktop, run `npm run build`, and update docs/progress accurately.
